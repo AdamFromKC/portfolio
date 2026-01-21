@@ -431,7 +431,8 @@
             position: fixed;
             bottom: 50px;
             left: 0;
-            width: 450px;
+            width: 850px;
+            max-width: calc(100vw - 200px);
             height: 50px;
             background: var(--mac-gray);
             border-top: 2px solid var(--mac-black);
@@ -623,6 +624,66 @@
             vertical-align: middle;
             margin-right: 5px;
             image-rendering: pixelated;
+        }
+        
+        /* Seek Bar Styles */
+        .seek-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 400px;
+        }
+        
+        .seek-time {
+            font-size: 14px;
+            min-width: 45px;
+            text-align: center;
+        }
+        
+        .seek-bar {
+            flex: 1;
+            height: 20px;
+            background: var(--mac-white);
+            border: 2px solid var(--mac-black);
+            border-top-color: var(--mac-dark);
+            border-left-color: var(--mac-dark);
+            border-bottom-color: var(--mac-white);
+            border-right-color: var(--mac-white);
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .seek-bar-progress {
+            height: 100%;
+            background: var(--mac-blue);
+            width: 0%;
+            pointer-events: none;
+        }
+        
+        /* Music Window Controls */
+        .music-window-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--mac-gray);
+            border: 2px solid var(--mac-black);
+            margin-bottom: 15px;
+        }
+        
+        .music-window-controls .music-bar-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+        }
+        
+        .music-window-seek {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         /* Music Library Window */
@@ -969,9 +1030,110 @@
         }
 
         @media (max-width: 768px) {
+            /* Hide desktop UI */
+            .menu-bar,
+            .desktop-icons,
+            .taskbar,
             .window {
-                min-width: 90vw;
-                max-width: 90vw;
+                display: none !important;
+            }
+            
+            /* Allow scrolling on mobile */
+            body {
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding: 20px;
+                padding-bottom: 100px;
+            }
+            
+            /* Show mobile content */
+            .mobile-content {
+                display: block !important;
+            }
+            
+            .mobile-section {
+                background: var(--mac-white);
+                border: 2px solid var(--mac-black);
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: var(--window-shadow);
+            }
+            
+            .mobile-section h2 {
+                font-size: 26px;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid var(--mac-black);
+            }
+            
+            .mobile-section h3 {
+                font-size: 22px;
+                margin: 20px 0 10px 0;
+            }
+            
+            .mobile-section p,
+            .mobile-section li {
+                font-size: 18px;
+                line-height: 1.6;
+                margin-bottom: 12px;
+            }
+            
+            .mobile-section ul {
+                margin-left: 20px;
+            }
+            
+            .mobile-section a {
+                color: var(--mac-blue);
+                text-decoration: underline;
+            }
+            
+            .mobile-tagline {
+                background: var(--mac-gray);
+                border: 2px solid var(--mac-black);
+                padding: 20px;
+                margin-bottom: 20px;
+                text-align: center;
+                font-size: 19px;
+            }
+            
+            .mobile-header {
+                text-align: center;
+                background: var(--mac-gray);
+                padding: 30px 20px;
+            }
+            
+            .mobile-header h1 {
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+            
+            .mobile-header p {
+                font-size: 20px;
+            }
+            
+            .contact-item {
+                margin-bottom: 15px;
+                padding: 15px;
+                background: var(--mac-gray);
+                border: 2px solid var(--mac-black);
+            }
+            
+            /* Music player on mobile */
+            .music-player-bar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .music-bar-info {
+                display: none;
+            }
+            
+            .seek-bar-container {
+                display: none;
             }
 
             .project-grid {
@@ -980,18 +1142,6 @@
 
             .metrics {
                 grid-template-columns: 1fr;
-            }
-
-            .desktop-icons {
-                position: static;
-                flex-direction: row;
-                justify-content: center;
-                margin: 20px;
-                flex-wrap: wrap;
-            }
-
-            .music-bar-info {
-                display: none;
             }
         }
         
@@ -1839,6 +1989,25 @@
             <div class="window-content">
                 <h2 style="font-size: 28px; margin-bottom: 15px; border-bottom: 2px solid #000; padding-bottom: 10px;"><canvas class="header-music-icon" width="48" height="48"></canvas> MUSIC LIBRARY</h2>
                 
+                <!-- Music Controls -->
+                <div class="music-window-controls" id="musicWindowControls" style="display: none;">
+                    <div class="music-bar-controls">
+                        <button class="music-bar-btn" onclick="previousTrack()" title="Previous">◄◄</button>
+                        <button class="music-bar-btn" id="windowPlayPauseBtn" onclick="togglePlay()" title="Play/Pause">►</button>
+                        <button class="music-bar-btn" onclick="nextTrack()" title="Next">►►</button>
+                    </div>
+                    <div class="music-window-seek">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="seek-time" id="windowCurrentTime">0:00</span>
+                            <div class="seek-bar" id="windowSeekBar" onclick="seekTo(event, 'window')" style="flex: 1;">
+                                <div class="seek-bar-progress" id="windowSeekProgress"></div>
+                            </div>
+                            <span class="seek-time" id="windowTotalTime">0:00</span>
+                        </div>
+                        <div style="font-size: 16px; font-weight: bold; text-align: center;" id="windowNowPlayingText">No Track Playing</div>
+                    </div>
+                </div>
+                
                 <!-- Now Playing Section -->
                 <div id="libraryNowPlaying" style="display: none; background: #f0f0f0; border: 2px solid #000; padding: 10px; margin-bottom: 15px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
@@ -1876,6 +2045,13 @@
         <div class="music-bar-info">
             <div class="music-bar-title" id="barTitle">No Track Playing</div>
             <div class="music-bar-artist" id="barArtist">Select a song from the Music Library</div>
+        </div>
+        <div class="seek-bar-container">
+            <span class="seek-time" id="barCurrentTime">0:00</span>
+            <div class="seek-bar" id="barSeekBar" onclick="seekTo(event, 'bar')">
+                <div class="seek-bar-progress" id="barSeekProgress"></div>
+            </div>
+            <span class="seek-time" id="barTotalTime">0:00</span>
         </div>
         <div class="music-bar-controls">
             <button class="music-bar-btn" onclick="previousTrack()" title="Previous">◄◄</button>
@@ -1934,66 +2110,46 @@
             const libraryList = document.getElementById('libraryList');
             libraryList.innerHTML = '<p style="text-align: center; padding: 40px; font-size: 18px; color: #666;">Loading music files...</p>';
 
-            for (let i = 0; i < MUSIC_FILES.length; i++) {
-                const filename = MUSIC_FILES[i];
-                try {
-                    await loadTrackMetadata(filename, i);
-                } catch (error) {
-                    console.error(`Error loading ${filename}:`, error);
-                    // Add track with filename as fallback
+            try {
+                // Load metadata from JSON file
+                const response = await fetch('./music-metadata.json');
+                
+                if (!response.ok) {
+                    throw new Error('Metadata file not found');
+                }
+                
+                const metadata = await response.json();
+                musicLibrary = metadata;
+                
+                console.log(`Loaded metadata for ${musicLibrary.length} tracks`);
+                renderLibrary();
+                
+            } catch (error) {
+                console.error('Error loading metadata:', error);
+                
+                // Fallback: parse filenames
+                console.log('Falling back to filename parsing...');
+                for (let i = 0; i < MUSIC_FILES.length; i++) {
+                    const filename = MUSIC_FILES[i];
+                    const nameWithoutExt = filename.replace('.mp3', '');
+                    const parts = nameWithoutExt.split(' - ');
+                    
                     musicLibrary.push({
                         file: filename,
-                        title: filename.replace('.mp3', ''),
-                        artist: 'Unknown Artist',
-                        album: 'Unknown Album',
+                        title: parts.slice(1).join(' - ') || nameWithoutExt,
+                        artist: parts[0] || 'Unknown Artist',
+                        album: 'Portfolio Playlist',
                         albumArt: null
                     });
                 }
+                
+                renderLibrary();
             }
-
-            renderLibrary();
         }
 
         function loadTrackMetadata(filename, index) {
-            return new Promise((resolve, reject) => {
-                jsmediatags.read(MUSIC_BASE_URL + filename, {
-                    onSuccess: function(tag) {
-                        const tags = tag.tags;
-                        let albumArtUrl = null;
-
-                        // Extract album art if available
-                        if (tags.picture) {
-                            const picture = tags.picture;
-                            const base64String = picture.data.reduce((data, byte) => {
-                                return data + String.fromCharCode(byte);
-                            }, '');
-                            albumArtUrl = `data:${picture.format};base64,${btoa(base64String)}`;
-                        }
-
-                        musicLibrary.push({
-                            file: filename,
-                            title: tags.title || filename.replace('.mp3', ''),
-                            artist: tags.artist || 'Unknown Artist',
-                            album: tags.album || 'Unknown Album',
-                            albumArt: albumArtUrl
-                        });
-
-                        resolve();
-                    },
-                    onError: function(error) {
-                        console.error('Metadata read error:', error);
-                        // Add track with filename as fallback
-                        musicLibrary.push({
-                            file: filename,
-                            title: filename.replace('.mp3', ''),
-                            artist: 'Unknown Artist',
-                            album: 'Unknown Album',
-                            albumArt: null
-                        });
-                        resolve(); // Still resolve to continue loading other tracks
-                    }
-                });
-            });
+            // Deprecated - now loading from JSON file
+            return Promise.resolve();
         }
 
         function renderLibrary() {
@@ -2068,6 +2224,7 @@
             }
             isShuffleMode = true;
             createShuffledPlaylist();
+            // Start with first song in the shuffled playlist (which is random)
             playTrack(shuffledPlaylist[0]);
         }
 
@@ -2084,11 +2241,7 @@
             shuffledPlaylist = [];
             const indices = Array.from({length: musicLibrary.length}, (_, i) => i);
 
-            // Start with current track
-            shuffledPlaylist.push(currentTrackIndex);
-            indices.splice(indices.indexOf(currentTrackIndex), 1);
-
-            // Shuffle remaining
+            // Shuffle all indices (including current track)
             while (indices.length > 0) {
                 const randomIndex = Math.floor(Math.random() * indices.length);
                 shuffledPlaylist.push(indices[randomIndex]);
@@ -2164,6 +2317,13 @@
                 }
             }
             
+            // Update window controls
+            const windowControls = document.getElementById('musicWindowControls');
+            if (windowControls) {
+                windowControls.style.display = 'flex';
+                document.getElementById('windowNowPlayingText').textContent = `${track.artist} - ${track.title}`;
+            }
+            
             // Update library now playing section
             const libraryNowPlaying = document.getElementById('libraryNowPlaying');
             if (libraryNowPlaying) {
@@ -2191,7 +2351,12 @@
         }
 
         function updatePlayPauseButton() {
-            document.getElementById('playPauseBtn').textContent = isPlaying ? '❚❚' : '►';
+            const symbol = isPlaying ? '❚❚' : '►';
+            document.getElementById('playPauseBtn').textContent = symbol;
+            const windowBtn = document.getElementById('windowPlayPauseBtn');
+            if (windowBtn) {
+                windowBtn.textContent = symbol;
+            }
         }
 
         function highlightCurrentTrack() {
@@ -2200,6 +2365,52 @@
                 item.classList.toggle('playing', index === currentTrackIndex);
             });
         }
+
+        // Seek bar functionality
+        function seekTo(event, source) {
+            if (!audioPlayer.src) return;
+            
+            const seekBar = source === 'bar' ? document.getElementById('barSeekBar') : document.getElementById('windowSeekBar');
+            const rect = seekBar.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            const seekTime = percent * audioPlayer.duration;
+            
+            if (!isNaN(seekTime)) {
+                audioPlayer.currentTime = seekTime;
+            }
+        }
+        
+        function updateSeekBar() {
+            if (!audioPlayer.src || !audioPlayer.duration) return;
+            
+            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            
+            // Update bottom bar
+            document.getElementById('barSeekProgress').style.width = percent + '%';
+            document.getElementById('barCurrentTime').textContent = formatTime(audioPlayer.currentTime);
+            document.getElementById('barTotalTime').textContent = formatTime(audioPlayer.duration);
+            
+            // Update window
+            document.getElementById('windowSeekProgress').style.width = percent + '%';
+            document.getElementById('windowCurrentTime').textContent = formatTime(audioPlayer.currentTime);
+            document.getElementById('windowTotalTime').textContent = formatTime(audioPlayer.duration);
+        }
+        
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+        
+        // Update seek bar as song plays
+        audioPlayer.addEventListener('timeupdate', updateSeekBar);
+        
+        // Load duration when metadata loads
+        audioPlayer.addEventListener('loadedmetadata', function() {
+            document.getElementById('barTotalTime').textContent = formatTime(audioPlayer.duration);
+            document.getElementById('windowTotalTime').textContent = formatTime(audioPlayer.duration);
+        });
 
         // Auto-advance to next track
         audioPlayer.addEventListener('ended', nextTrack);
