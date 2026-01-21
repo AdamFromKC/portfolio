@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adam Ridings</title>
+    <title>Adam Ridings - Product Marketing for AI Companies</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <style>
@@ -972,66 +973,28 @@
             background: var(--mac-white);
         }
 
-        /* MOBILE LAYOUT */
         @media (max-width: 768px) {
-            /* Allow scrolling on mobile */
-            body {
-                overflow-y: auto;
-                overflow-x: hidden;
-                padding-bottom: 100px;
-            }
-            
-            /* Hide desktop-only elements */
+            /* Hide desktop UI on mobile */
             .menu-bar,
             .desktop-icons,
-            .taskbar {
-                display: none;
-            }
-            
-            /* Hide all windows by default on mobile */
+            .taskbar,
             .window {
                 display: none !important;
             }
             
-            /* Mobile header */
-            body::before {
-                content: '';
-                display: block;
-                height: 60px;
-                background: var(--mac-gray);
-                border-bottom: 2px solid var(--mac-black);
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 10000;
+            /* Allow scrolling */
+            body {
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding: 20px;
+                padding-bottom: 100px;
             }
             
-            body::after {
-                content: 'ADAM RIDINGS';
-                display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 60px;
-                line-height: 60px;
-                text-align: center;
-                font-size: 24px;
-                font-weight: bold;
-                z-index: 10001;
-                pointer-events: none;
-            }
-            
-            /* Mobile content container */
+            /* Show mobile content */
             .mobile-content {
                 display: block !important;
-                margin-top: 60px;
-                padding: 20px;
-                max-width: 100%;
             }
             
-            /* Mobile sections */
             .mobile-section {
                 background: var(--mac-white);
                 border: 2px solid var(--mac-black);
@@ -1041,78 +1004,76 @@
             }
             
             .mobile-section h2 {
-                font-size: 24px;
+                font-size: 26px;
                 margin-bottom: 15px;
                 padding-bottom: 10px;
                 border-bottom: 2px solid var(--mac-black);
             }
             
             .mobile-section h3 {
-                font-size: 20px;
-                margin: 15px 0 10px 0;
+                font-size: 22px;
+                margin: 20px 0 10px 0;
             }
             
             .mobile-section p,
             .mobile-section li {
                 font-size: 18px;
-                line-height: 1.5;
-                margin-bottom: 10px;
+                line-height: 1.6;
+                margin-bottom: 12px;
             }
             
             .mobile-section ul {
                 margin-left: 20px;
+                list-style-position: outside;
             }
             
             .mobile-section a {
                 color: var(--mac-blue);
                 text-decoration: underline;
-                word-break: break-word;
             }
             
-            /* Mobile tagline */
             .mobile-tagline {
                 background: var(--mac-gray);
                 border: 2px solid var(--mac-black);
-                padding: 15px;
+                padding: 20px;
                 margin-bottom: 20px;
-                font-size: 18px;
                 text-align: center;
+                font-size: 19px;
             }
             
-            /* Mobile music player */
+            .mobile-header {
+                text-align: center;
+                background: var(--mac-gray);
+                padding: 30px 20px;
+            }
+            
+            .mobile-header h1 {
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+            
+            .mobile-header p {
+                font-size: 20px;
+            }
+            
+            /* Contact styling */
+            .contact-item {
+                margin-bottom: 15px;
+                padding: 15px;
+                background: var(--mac-gray);
+                border: 2px solid var(--mac-black);
+            }
+            
+            /* Music player on mobile */
             .music-player-bar {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                height: 80px;
-                padding: 10px;
             }
             
             .music-bar-info {
                 display: none;
-            }
-            
-            .music-controls {
-                justify-content: center;
-                gap: 15px;
-            }
-            
-            .music-controls button {
-                font-size: 20px;
-                padding: 8px 12px;
-            }
-            
-            /* Mobile contact items */
-            .mobile-section .contact-methods {
-                display: block;
-            }
-            
-            .mobile-section .contact-item {
-                margin-bottom: 15px;
-                padding: 15px;
-                background: var(--mac-gray);
-                border: 2px solid var(--mac-black);
             }
         }
         
@@ -1121,27 +1082,29 @@
 <body>
     <!-- Mobile Layout (hidden on desktop) -->
     <div class="mobile-content" style="display: none;">
+        <div class="mobile-header mobile-section">
+            <h1>ADAM RIDINGS</h1>
+            <p><strong>Product Marketing for AI Companies</strong></p>
+        </div>
+        
         <div class="mobile-tagline">
             > I code neural networks at night and run marketing campaigns by day
         </div>
         
         <div class="mobile-section">
-            <h2>ADAM RIDINGS</h2>
-            <p style="font-size: 20px; margin-bottom: 15px;"><strong>Product Marketing for AI Companies</strong></p>
-            
-            <h3>WHAT MAKES ME DIFFERENT:</h3>
+            <h2>WHAT MAKES ME DIFFERENT</h2>
             <ul>
                 <li>I implement neural networks from scratch in NumPy (CNNs, transformers, LSTMs). I've built LLM applications. I read research papers and follow technical discussions about model architecture. I understand how these systems actually work.</li>
                 <li>I've managed $2.24M in marketing spend that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen campaigns that increased demo requests 40% and form conversions 30%. I know what works in both B2C and B2B.</li>
                 <li>I translate between technical teams and buyers. I understand what makes the product technically differentiated, then turn that into positioning and messaging that drives adoption. That's product marketing for AI companies.</li>
                 <li>MS in Data Science & AI, graduating May 2026. Four years managing marketing budgets and campaigns. Looking for product marketing roles where technical depth matters.</li>
             </ul>
+            <p style="margin-top: 20px;">I built this site myself. The music player parses MP3 metadata, the windows are draggable and animated, everything works without frameworks.</p>
         </div>
         
         <div class="mobile-section">
             <h2>WHY THIS COMBINATION WORKS</h2>
             <p>Product marketing for AI companies requires understanding the technology well enough to know what's actually differentiated, and having the marketing experience to turn that into positioning that drives revenue. Most people have one or the other. I have both.</p>
-            
             <p>I implement neural networks from scratch to understand how they actually work, not just how to use the APIs. I run marketing campaigns with real budgets to learn what converts and what doesn't. Both are valuable for AI product marketing.</p>
             
             <h3>WHAT I BRING:</h3>
@@ -1154,42 +1117,67 @@
         </div>
         
         <div class="mobile-section">
+            <h2>WORK EXPERIENCE</h2>
+            
+            <h3>Medicare Marketing @ Blue Cross Blue Shield of Kansas</h3>
+            <p style="color: #666; margin-bottom: 10px;">2023-PRESENT • PRODUCT MARKETING STRATEGIST</p>
+            <p><strong>$2.24M Budget | 150K+ Enrollments | 3 Product Lines</strong></p>
+            <p>Managing Medicare marketing across Medicare Advantage, Supplement, and Part D products. Allocated $2.24M budget across channels, managed direct mail campaigns (60%+ of enrollments), digital advertising, events, and CMS compliance process.</p>
+            
+            <h3 style="margin-top: 30px;">Demand Generation @ Mekorma (B2B SaaS)</h3>
+            <p style="color: #666; margin-bottom: 10px;">B2B SAAS • PAYMENTS • MARKETING OPS</p>
+            <p><strong>40% Increase in Demos | 30% Increase in Conversions</strong></p>
+            <p>Optimized demand generation for payments automation software. Reduced form fields from 9 to 4 (30% conversion increase), built industry-specific landing pages, implemented HubSpot nurture sequences, ran webinar program that became highest-performing lead gen channel.</p>
+        </div>
+        
+        <div class="mobile-section">
+            <h2>TECHNICAL PROJECTS</h2>
+            
+            <h3>Neural Networks from Scratch</h3>
+            <p style="color: #666; margin-bottom: 10px;">COMPUTER VISION • DEEP LEARNING • NUMPY</p>
+            <p>Implemented CNNs (LeNet-5, Mini-VGG) using only NumPy. Coded backpropagation, convolution operations, and optimization algorithms from equations. Achieved 70%+ accuracy on CIFAR-10 by understanding the actual math, not just framework APIs.</p>
+            
+            <h3 style="margin-top: 25px;">Sarcasm Detection System</h3>
+            <p style="color: #666; margin-bottom: 10px;">NLP • LLMs • COMPARATIVE ANALYSIS</p>
+            <p>Compared traditional neural networks (RNN/LSTM) vs. LLM prompting for sarcasm detection. Analyzed accuracy vs. computational cost tradeoffs. Traditional models were faster and cheaper, LLMs more accurate but expensive.</p>
+            
+            <h3 style="margin-top: 25px;">This Portfolio Website</h3>
+            <p style="color: #666; margin-bottom: 10px;">WEB DEVELOPMENT • UI/UX • AUDIO PROCESSING</p>
+            <p>Built in vanilla HTML/CSS/JS with draggable windows, MP3 metadata parsing, pixel art icons, and retro Mac OS design. Zero frameworks. Shows understanding of DOM manipulation, event handling, state management, and browser APIs.</p>
+        </div>
+        
+        <div class="mobile-section">
             <h2>SKILLS</h2>
+            
             <h3>Product Marketing & GTM</h3>
-            <p>Campaign Strategy • Product Positioning • Go-to-Market Planning • Competitive Analysis • Sales Enablement • Customer Research • Messaging & Copy • Budget Management ($2M+) • A/B Testing • Multi-Channel Campaigns</p>
+            <p>Campaign Strategy • Product Positioning • Go-to-Market Planning • Competitive Analysis • Sales Enablement • Customer Research • Messaging & Copy • Budget Management ($2M+) • A/B Testing • Multi-Channel Campaigns • Stakeholder Management • Performance Analytics</p>
             
             <h3>AI/ML & Data Science</h3>
-            <p>Python • Deep Learning (TensorFlow, PyTorch) • Neural Networks (CNNs, RNNs, Transformers) • Natural Language Processing • LLM Prompting • Model Training • Computer Vision • SQL/NoSQL • Git/GitHub</p>
+            <p>Python (pandas, NumPy, scikit-learn) • Deep Learning (TensorFlow, PyTorch, Keras) • Neural Networks (CNNs, RNNs, Transformers) • Natural Language Processing • LLM Prompting & Evaluation • Model Training & Optimization • Computer Vision • Statistical Analysis • Data Visualization • SQL/NoSQL (MongoDB) • Git/GitHub • API Integration</p>
             
-            <h3>Marketing Tools</h3>
-            <p>HubSpot • Google Analytics • Salesforce • Adobe Analytics • Adobe Creative Suite • Figma • Email Automation • Landing Page Optimization • SEO/SEM</p>
+            <h3>Marketing Tools & Platforms</h3>
+            <p>HubSpot (Marketing & CRM) • Google Analytics • Adobe Analytics • Salesforce CRM • Adobe Creative Suite • Figma • Canva • Workfront (Project Mgmt) • CMS Platforms • Email Automation • Landing Page Optimization • SEO/SEM</p>
         </div>
         
         <div class="mobile-section">
             <h2>CONTACT</h2>
-            <div class="contact-methods">
-                <div class="contact-item">
-                    <strong>Email</strong><br>
-                    <a href="mailto:adamridings98@gmail.com">adamridings98@gmail.com</a>
-                </div>
-                <div class="contact-item">
-                    <strong>LinkedIn</strong><br>
-                    <a href="https://www.linkedin.com/in/adamridings/" target="_blank">linkedin.com/in/adamridings</a>
-                </div>
-                <div class="contact-item">
-                    <strong>Phone</strong><br>
-                    <a href="tel:8168636941">(816) 863-6941</a>
-                </div>
+            <div class="contact-item">
+                <strong>Email</strong><br>
+                <a href="mailto:adamridings98@gmail.com">adamridings98@gmail.com</a>
             </div>
-            
+            <div class="contact-item">
+                <strong>LinkedIn</strong><br>
+                <a href="https://www.linkedin.com/in/adamridings/" target="_blank">linkedin.com/in/adamridings</a>
+            </div>
+            <div class="contact-item">
+                <strong>Phone</strong><br>
+                <a href="tel:8168636941">(816) 863-6941</a>
+            </div>
             <p style="margin-top: 20px;"><strong>Looking for:</strong> Product marketing roles at AI/ML companies where technical depth actually helps.</p>
-        </div>
-        
-        <div class="mobile-section">
-            <p style="text-align: center; color: #666;">Built this site in vanilla JavaScript. No frameworks.</p>
         </div>
     </div>
     
+    <!-- Desktop Layout -->
     <!-- Classic Startup Animation -->
     <!-- Menu Bar -->
     <div class="menu-bar">
@@ -1335,10 +1323,10 @@
                 <div class="quick-facts">
                     <h3>WHAT MAKES ME DIFFERENT:</h3>
                     <ul>
-                        <li>I implement neural networks from scratch in NumPy (CNNs, transformers, LSTMs). I've built LLM applications. I read research papers and follow technical discussions about model architecture. I understand how these systems actually work.</li>
-                        <li>I've managed $2.24M in marketing spend that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen campaigns that increased demo requests 40% and form conversions 30%. I know what works in both B2C and B2B.</li>
-                        <li>I translate between technical teams and buyers. I understand what makes the product technically differentiated, then turn that into positioning and messaging that drives adoption. That's product marketing for AI companies.</li>
-                        <li>MS in Data Science & AI, graduating May 2026. Four years managing marketing budgets and campaigns. Looking for product marketing roles where technical depth matters.</li>
+                        <li>I implement neural networks from scratch in NumPy—CNNs, transformers, LSTMs. I've built LLM applications. I can read research papers and follow technical discussions about model architecture. This isn't surface-level AI knowledge.</li>
+                        <li>I've managed $2.24M in marketing spend that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen campaigns that increased demo requests 40% and form conversions 30%. I understand both direct-to-consumer and enterprise go-to-market.</li>
+                        <li>I can translate between technical teams and buyers. I understand what makes the product technically differentiated, then turn that into positioning and messaging that drives adoption. That's the core of product marketing for AI companies.</li>
+                        <li>MS in Data Science & AI, graduating May 2026. Four years managing marketing budgets and campaigns. Looking for product marketing roles where technical depth is an advantage, not a nice-to-have.</li>
                     </ul>
                 </div>
 
@@ -1347,7 +1335,7 @@
                 </p>
 
                 <p style="margin-top: 15px; font-size: 19px; color: #666;">
-                    I built this site myself. The music player parses MP3 metadata, the windows are draggable and animated, everything works without frameworks.
+                    I built this site myself—the music player parses MP3 metadata, the windows are draggable and animated, everything works without frameworks.
                 </p>
             </div>
         </div>
@@ -1371,16 +1359,17 @@
                 </p>
                 
                 <p style="font-size: 19px; margin-bottom: 20px;">
-                    I implement neural networks from scratch to understand how they actually work, not just how to use the APIs. I run marketing campaigns with real budgets to learn what converts and what doesn't. Both are valuable for AI product marketing.
+                    I implement neural networks from scratch because that's the only way to really understand how they work. I run marketing 
+                    campaigns with real budgets because that's how you learn what actually converts. This combination is useful for AI product marketing.
                 </p>
 
                 <div class="quick-facts">
                     <h3>WHAT I BRING:</h3>
                     <ul>
-                        <li><strong>Technical depth:</strong> I've implemented CNNs, LSTMs, and transformers in NumPy. I've built LLM applications. I read AI research papers and understand what's novel versus hype. When engineering discusses model architecture or training challenges, I follow and ask informed questions.</li>
+                        <li><strong>Technical depth:</strong> I've implemented CNNs, LSTMs, and transformers in NumPy. I've built LLM applications. I can read AI research papers and understand what's novel versus hype. When engineering discusses model architecture or training challenges, I can follow and ask informed questions.</li>
                         <li><strong>Marketing execution:</strong> I've managed $2.24M in marketing budgets that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen that increased demos 40%. I understand conversion optimization, marketing automation, A/B testing, and how to build systems that scale.</li>
-                        <li><strong>Product marketing focus:</strong> I focus on positioning, messaging, competitive analysis, and sales enablement (not just campaign execution). I take technical capabilities and turn them into clear value propositions that resonate with buyers who care about outcomes, not features.</li>
-                        <li><strong>The translation skill:</strong> I sit with engineers and understand technical tradeoffs, then write positioning that makes sense to non-technical buyers. That's what product marketing for AI companies requires.</li>
+                        <li><strong>Product marketing focus:</strong> I focus on positioning, messaging, competitive analysis, and sales enablement—not just campaign execution. I can take technical capabilities and turn them into clear value propositions that resonate with buyers who care about outcomes, not features.</li>
+                        <li><strong>The translation skill:</strong> I can sit with engineers and understand technical tradeoffs, then write positioning that makes sense to non-technical buyers. That's what product marketing for AI companies actually requires.</li>
                     </ul>
                 </div>
 
@@ -2086,33 +2075,31 @@
         // Music Player
         const MUSIC_BASE_URL = './Music/'; // Music folder
         const MUSIC_FILES = [
-            // Add your 25 MP3 files here - they should be in the /Music folder
-            'song1.mp3',
-            'song2.mp3',
-            'song3.mp3',
-            'song4.mp3',
-            'song5.mp3',
-            'song6.mp3',
-            'song7.mp3',
-            'song8.mp3',
-            'song9.mp3',
-            'song10.mp3',
-            'song11.mp3',
-            'song12.mp3',
-            'song13.mp3',
-            'song14.mp3',
-            'song15.mp3',
-            'song16.mp3',
-            'song17.mp3',
-            'song18.mp3',
-            'song19.mp3',
-            'song20.mp3',
-            'song21.mp3',
-            'song22.mp3',
-            'song23.mp3',
-            'song24.mp3',
-            'song25.mp3'
-            // Update these filenames to match your actual MP3 files
+            'Bad Bunny - BAILE INoLVIDABLE.mp3',
+            'Billie Eilish - BIRDS OF A FEATHER.mp3',
+            'Bruno Mars - I Just Might.mp3',
+            'Childish Gambino - Summertime Magic.mp3',
+            'Djo - End Of Beginning.mp3',
+            'Drake - Madiba Riddim.mp3',
+            'Fleetwood Mac - Dreams.mp3',
+            'Frank Ocean - Pink + White.mp3',
+            'Glass Animals - Heat Waves.mp3',
+            'Harry Styles - Golden.mp3',
+            'Jaden - Summertime In Paris (feat. Willow).mp3',
+            'Jorja Smith & Preditah - On My Mind.mp3',
+            'Justin Bieber - SPEED DEMON.mp3',
+            'Kendrick Lamar - Die Hard (feat. Blxst & Amanda Reifer).mp3',
+            'Lady Gaga & Bruno Mars - Die With A Smile.mp3',
+            'Linkin Park - The Emptiness Machine.mp3',
+            'Mac Miller - Woods.mp3',
+            'Noah Cyrus - Again (feat. XXXTENTACION) [Alan Walker Remix].mp3',
+            'Post Malone - Mourning.mp3',
+            'RJ Pasin & Julia Wolf - Wings.mp3',
+            'Tems - Love Me JeJe.mp3',
+            'The Weeknd - Out of Time.mp3',
+            'Tory Lanez - The Color Violet.mp3',
+            'Tyler The Creator - EARFQUAKE.mp3',
+            'WILLOW - Wait a Minute.mp3'
         ];
 
         let musicLibrary = [];
