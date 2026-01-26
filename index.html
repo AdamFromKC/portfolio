@@ -32,6 +32,11 @@
             overflow: hidden;
             cursor: default;
         }
+        
+        /* Hide mobile content on desktop */
+        .mobile-content {
+            display: none;
+        }
 
         /* Menu Bar */
         .menu-bar {
@@ -1126,14 +1131,41 @@
                 right: 0;
                 width: 100%;
                 max-width: 100%;
+                flex-wrap: wrap;
+                padding: 10px;
+            }
+            
+            .music-bar-toggle,
+            .music-bar-album-art,
+            .music-bar-library-btn {
+                display: none;
             }
             
             .music-bar-info {
-                display: none;
+                flex: 1;
+                min-width: 100%;
+                text-align: center;
+                margin-bottom: 8px;
+            }
+            
+            .music-bar-title {
+                font-size: 18px;
+            }
+            
+            .music-bar-artist {
+                font-size: 14px;
             }
             
             .seek-bar-container {
-                display: none;
+                flex: 1;
+                min-width: 100%;
+                order: 3;
+                margin-top: 8px;
+            }
+            
+            .music-bar-controls {
+                order: 2;
+                margin: 0 auto;
             }
 
             .project-grid {
@@ -1148,6 +1180,101 @@
     </style>
 </head>
 <body>
+    <!-- Mobile Layout (hidden on desktop) -->
+    <div class="mobile-content" style="display: none;">
+        <div class="mobile-section" style="text-align: center; background: var(--mac-gray); padding: 30px 20px;">
+            <h1 style="font-size: 32px; margin-bottom: 10px;">ADAM RIDINGS</h1>
+            <p style="font-size: 20px; margin-bottom: 15px;"><strong>Product Marketing for AI Companies</strong></p>
+            <p style="font-size: 18px;">> I code neural networks at night and run marketing campaigns by day</p>
+        </div>
+        
+        <div class="mobile-section">
+            <h2>WHAT MAKES ME DIFFERENT</h2>
+            <ul>
+                <li>I implement neural networks from scratch in NumPy (CNNs, transformers, LSTMs). I've built LLM applications. I read research papers and follow technical discussions about model architecture. I understand how these systems actually work.</li>
+                <li>I've managed $2.24M in marketing spend that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen campaigns that increased demo requests 40% and form conversions 30%. I know what works in both B2C and B2B.</li>
+                <li>I translate between technical teams and buyers. I understand what makes the product technically differentiated, then turn that into positioning and messaging that drives adoption. That's product marketing for AI companies.</li>
+                <li>MS in Data Science & AI, graduating May 2026. Four years managing marketing budgets and campaigns. Looking for product marketing roles where technical depth matters.</li>
+            </ul>
+            <p style="margin-top: 20px;">I built this site myself. The music player parses MP3 metadata, the windows are draggable and animated, everything works without frameworks.</p>
+        </div>
+        
+        <div class="mobile-section">
+            <h2>WHY THIS COMBINATION WORKS</h2>
+            <p>Product marketing for AI companies requires understanding the technology well enough to know what's actually differentiated, and having the marketing experience to turn that into positioning that drives revenue. Most people have one or the other. I have both.</p>
+            <p>I implement neural networks from scratch to understand how they actually work, not just how to use the APIs. I run marketing campaigns with real budgets to learn what converts and what doesn't. Both are valuable for AI product marketing.</p>
+            
+            <h3>WHAT I BRING:</h3>
+            <ul>
+                <li><strong>Technical depth:</strong> I've implemented CNNs, LSTMs, and transformers in NumPy. I've built LLM applications. I read AI research papers and understand what's novel versus hype. When engineering discusses model architecture or training challenges, I follow and ask informed questions.</li>
+                <li><strong>Marketing execution:</strong> I've managed $2.24M in marketing budgets that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen that increased demos 40%. I understand conversion optimization, marketing automation, A/B testing, and how to build systems that scale.</li>
+                <li><strong>Product marketing focus:</strong> I focus on positioning, messaging, competitive analysis, and sales enablement (not just campaign execution). I take technical capabilities and turn them into clear value propositions that resonate with buyers who care about outcomes, not features.</li>
+                <li><strong>The translation skill:</strong> I sit with engineers and understand technical tradeoffs, then write positioning that makes sense to non-technical buyers. That's what product marketing for AI companies requires.</li>
+            </ul>
+        </div>
+        
+        <div class="mobile-section">
+            <h2>WORK EXPERIENCE</h2>
+            
+            <h3>Medicare Marketing @ Blue Cross Blue Shield of Kansas</h3>
+            <p style="color: #666; margin-bottom: 10px;">2023-PRESENT • PRODUCT MARKETING STRATEGIST</p>
+            <p><strong>$2.24M Budget | 150K+ Enrollments | 3 Product Lines</strong></p>
+            <p>Managing Medicare marketing across Medicare Advantage, Supplement, and Part D products. Allocated $2.24M budget across channels, managed direct mail campaigns (60%+ of enrollments), digital advertising, events, and CMS compliance process.</p>
+            
+            <h3 style="margin-top: 30px;">Demand Generation @ Mekorma (B2B SaaS)</h3>
+            <p style="color: #666; margin-bottom: 10px;">B2B SAAS • PAYMENTS • MARKETING OPS</p>
+            <p><strong>40% Increase in Demos | 30% Increase in Conversions</strong></p>
+            <p>Optimized demand generation for payments automation software. Reduced form fields from 9 to 4 (30% conversion increase), built industry-specific landing pages, implemented HubSpot nurture sequences, ran webinar program that became highest-performing lead gen channel.</p>
+        </div>
+        
+        <div class="mobile-section">
+            <h2>TECHNICAL PROJECTS</h2>
+            
+            <h3>Neural Networks from Scratch</h3>
+            <p style="color: #666; margin-bottom: 10px;">COMPUTER VISION • DEEP LEARNING • NUMPY</p>
+            <p>Implemented CNNs (LeNet-5, Mini-VGG) using only NumPy. Coded backpropagation, convolution operations, and optimization algorithms from equations. Achieved 70%+ accuracy on CIFAR-10 by understanding the actual math, not just framework APIs.</p>
+            
+            <h3 style="margin-top: 25px;">Sarcasm Detection System</h3>
+            <p style="color: #666; margin-bottom: 10px;">NLP • LLMs • COMPARATIVE ANALYSIS</p>
+            <p>Compared traditional neural networks (RNN/LSTM) vs. LLM prompting for sarcasm detection. Analyzed accuracy vs. computational cost tradeoffs. Traditional models were faster and cheaper, LLMs more accurate but expensive.</p>
+            
+            <h3 style="margin-top: 25px;">This Portfolio Website</h3>
+            <p style="color: #666; margin-bottom: 10px;">WEB DEVELOPMENT • UI/UX • AUDIO PROCESSING</p>
+            <p>Built in vanilla HTML/CSS/JS with draggable windows, MP3 metadata parsing, pixel art icons, and retro Mac OS design. Zero frameworks. Shows understanding of DOM manipulation, event handling, state management, and browser APIs.</p>
+        </div>
+        
+        <div class="mobile-section">
+            <h2>SKILLS</h2>
+            
+            <h3>Product Marketing & GTM</h3>
+            <p>Campaign Strategy • Product Positioning • Go-to-Market Planning • Competitive Analysis • Sales Enablement • Customer Research • Messaging & Copy • Budget Management ($2M+) • A/B Testing • Multi-Channel Campaigns • Stakeholder Management • Performance Analytics</p>
+            
+            <h3>AI/ML & Data Science</h3>
+            <p>Python (pandas, NumPy, scikit-learn) • Deep Learning (TensorFlow, PyTorch, Keras) • Neural Networks (CNNs, RNNs, Transformers) • Natural Language Processing • LLM Prompting & Evaluation • Model Training & Optimization • Computer Vision • Statistical Analysis • Data Visualization • SQL/NoSQL (MongoDB) • Git/GitHub • API Integration</p>
+            
+            <h3>Marketing Tools & Platforms</h3>
+            <p>HubSpot (Marketing & CRM) • Google Analytics • Adobe Analytics • Salesforce CRM • Adobe Creative Suite • Figma • Canva • Workfront (Project Mgmt) • CMS Platforms • Email Automation • Landing Page Optimization • SEO/SEM</p>
+        </div>
+        
+        <div class="mobile-section">
+            <h2>CONTACT</h2>
+            <div class="contact-item">
+                <strong>Email</strong><br>
+                <a href="mailto:adamridings98@gmail.com">adamridings98@gmail.com</a>
+            </div>
+            <div class="contact-item">
+                <strong>LinkedIn</strong><br>
+                <a href="https://www.linkedin.com/in/adamridings/" target="_blank">linkedin.com/in/adamridings</a>
+            </div>
+            <div class="contact-item">
+                <strong>Phone</strong><br>
+                <a href="tel:8168636941">(816) 863-6941</a>
+            </div>
+            <p style="margin-top: 20px;"><strong>Looking for:</strong> Product marketing roles at AI/ML companies where technical depth actually helps.</p>
+        </div>
+    </div>
+    
+    <!-- Desktop Layout -->
     <!-- Classic Startup Animation -->
     <!-- Menu Bar -->
     <div class="menu-bar">
@@ -1963,12 +2090,12 @@
                 <h2 style="font-size: 28px; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">RESUME</h2>
                 
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="Adam%20Ridings%20Resume.pdf" download class="mac-button" style="font-size: 20px; padding: 12px 30px;">
+                    <a href="Adam_Ridings_Resume.pdf" download class="mac-button" style="font-size: 20px; padding: 12px 30px;">
                         📥 Download Resume (PDF)
                     </a>
                 </div>
 
-                <iframe src="Adam%20Ridings%20Resume.pdf" class="pdf-viewer"></iframe>
+                <iframe src="Adam_Ridings_Resume.pdf" class="pdf-viewer"></iframe>
 
                 <p style="margin-top: 20px; font-size: 17px; text-align: center; color: #666;">
                     Click the button above to download a copy, or view inline.
