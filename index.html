@@ -2238,15 +2238,32 @@
             libraryList.innerHTML = '<p style="text-align: center; padding: 40px; font-size: 18px; color: #666;">Loading music files...</p>';
 
             try {
-                // Load metadata from JSON file
-                const response = await fetch('./music-metadata.json');
+                // Load metadata from JSON file (without album art)
+                const metadataResponse = await fetch('./music-metadata.json');
                 
-                if (!response.ok) {
+                if (!metadataResponse.ok) {
                     throw new Error('Metadata file not found');
                 }
                 
-                const metadata = await response.json();
-                musicLibrary = metadata;
+                const metadata = await metadataResponse.json();
+                
+                // Load album art from separate JSON file
+                let albumArtData = {};
+                try {
+                    const albumArtResponse = await fetch('./album-art.json');
+                    if (albumArtResponse.ok) {
+                        albumArtData = await albumArtResponse.json();
+                        console.log(`Loaded album art for ${Object.keys(albumArtData).length} tracks`);
+                    }
+                } catch (artError) {
+                    console.log('No album art file found, using default icons');
+                }
+                
+                // Merge metadata with album art
+                musicLibrary = metadata.map(track => ({
+                    ...track,
+                    albumArt: albumArtData[track.file] || null
+                }));
                 
                 console.log(`Loaded metadata for ${musicLibrary.length} tracks`);
                 renderLibrary();
