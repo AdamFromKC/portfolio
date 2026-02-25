@@ -2950,8 +2950,14 @@
 
         // Dragging
         function startDrag(e, windowId) {
+            // Don't interfere with taps on window control buttons
+            if (e.target.closest('.window-control')) return;
+
             const windowEl = document.getElementById(windowId);
             if (windowEl.classList.contains('fullscreen')) return;
+
+            // On mobile, windows are fullscreen — no dragging needed
+            if (window.innerWidth <= 768) return;
             
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -3038,9 +3044,11 @@
         // Mobile menu dropdowns: tap to toggle (hover doesn't work on touch)
         if ('ontouchstart' in window) {
             document.querySelectorAll('.menu-item').forEach(function(item) {
-                item.addEventListener('touchstart', function(e) {
+                item.addEventListener('touchend', function(e) {
                     var dropdown = this.querySelector('.menu-dropdown');
                     if (!dropdown) return;
+                    // If the tap was on a dropdown item, let its onclick fire
+                    if (e.target.closest('.menu-dropdown-item')) return;
                     e.preventDefault();
                     var isOpen = dropdown.style.display === 'block';
                     // Close all dropdowns
@@ -3049,10 +3057,27 @@
                     });
                     // Toggle this one
                     dropdown.style.display = isOpen ? '' : 'block';
-                }, { passive: false });
+                });
             });
+
+            // Add touchend to dropdown items so they fire reliably
+            document.querySelectorAll('.menu-dropdown-item').forEach(function(item) {
+                item.addEventListener('touchend', function(e) {
+                    e.stopPropagation();
+                    // Close all dropdowns
+                    document.querySelectorAll('.menu-dropdown').forEach(function(d) {
+                        d.style.display = '';
+                    });
+                    // Trigger the onclick
+                    var onclick = this.getAttribute('onclick');
+                    if (onclick) {
+                        try { eval(onclick); } catch(err) {}
+                    }
+                });
+            });
+
             // Tap anywhere else to close dropdowns
-            document.addEventListener('touchstart', function(e) {
+            document.addEventListener('touchend', function(e) {
                 if (!e.target.closest('.menu-item')) {
                     document.querySelectorAll('.menu-dropdown').forEach(function(d) {
                         d.style.display = '';
