@@ -1123,10 +1123,12 @@
                 left: 0 !important;
                 width: 100vw !important;
                 height: calc(100vh - 28px - 82px) !important;
+                max-height: calc(100vh - 28px - 82px) !important;
                 max-width: 100vw !important;
                 resize: none !important;
                 border-left: none !important;
                 border-right: none !important;
+                overflow: hidden !important;
             }
 
             /* Bigger titlebar for touch */
@@ -1141,8 +1143,8 @@
                 font-size: 18px !important;
             }
 
-            .window-controls {
-                gap: 8px;
+            .window-controls .window-control:not(:first-child) {
+                display: none !important;
             }
 
             .window-title {
@@ -1398,7 +1400,7 @@
         </div>
 
         <!-- Welcome Window -->
-        <div id="welcome" class="window active" onclick="bringToFront('welcome')" style="top: 80px; left: 50px; width: 700px; height: 500px;">
+        <div id="welcome" class="window" onclick="bringToFront('welcome')" style="top: 80px; left: 50px; width: 700px; height: 500px;">
             <div class="window-titlebar" onmousedown="startDrag(event, 'welcome')" ontouchstart="startDrag(event, 'welcome')">
                 <div class="window-controls">
                     <div class="window-control" onclick="closeWindow('welcome')" title="Close">✕</div>
@@ -2653,8 +2655,16 @@
         drawAllMusicIcons();
 
         // Window Management
-        let activeWindows = new Set(['welcome']);
-        let frontWindow = 'welcome'; // Track which window is in front
+        let activeWindows = new Set();
+        let frontWindow = null;
+
+        // Only auto-open README on desktop
+        if (window.innerWidth > 768) {
+            activeWindows.add('welcome');
+            frontWindow = 'welcome';
+            const welcomeEl = document.getElementById('welcome');
+            if (welcomeEl) welcomeEl.classList.add('active');
+        }
         let draggedWindow = null;
         let dragOffsetX = 0;
         let dragOffsetY = 0;
