@@ -1214,6 +1214,9 @@
             }
 
             /* Tap-friendly menu items */
+            .apple-logo { pointer-events: none !important; }
+            .apple-logo .menu-dropdown { display: none !important; }
+
             .menu-bar-items {
                 gap: 8px;
             }
@@ -1314,8 +1317,8 @@
                     <div class="menu-dropdown-item" onclick="togglePlay()">Pause Song</div>
                 </div>
             </div>
-            <div class="menu-time" id="clock">12:00 PM</div>
         </div>
+        <div class="menu-time" id="clock">12:00 PM</div>
     </div>
 
     <!-- Desktop -->
@@ -2218,7 +2221,7 @@
         <div class="music-bar-toggle" onclick="toggleMusicBar()" title="Minimize/Maximize">
             <div class="music-bar-toggle-icon"></div>
         </div>
-        <div class="music-bar-album-art" id="barAlbumArt"><canvas width="48" height="48" style="width: 40px; height: 40px; image-rendering: pixelated;"></canvas></div>
+        <div class="music-bar-album-art" id="barAlbumArt" onclick="openWindow('music', this)" style="cursor: pointer;"><canvas width="48" height="48" style="width: 40px; height: 40px; image-rendering: pixelated;"></canvas></div>
         <div class="music-bar-info">
             <div class="music-bar-title" id="barTitle">No Track Playing</div>
             <div class="music-bar-artist" id="barArtist">Select a song from the Music Library</div>
@@ -3003,7 +3006,10 @@
             const hours = now.getHours() % 12 || 12;
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
-            document.getElementById('clock').textContent = `${hours}:${minutes} ${ampm}`;
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const dateStr = `${days[now.getDay()]} ${months[now.getMonth()]} ${now.getDate()}`;
+            document.getElementById('clock').textContent = `${dateStr}  |  ${hours}:${minutes} ${ampm}`;
         }
 
         updateClock();
