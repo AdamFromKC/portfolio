@@ -2992,6 +2992,16 @@
         updateClock();
         setInterval(updateClock, 1000);
 
+        // Reset scroll position on all windows at page load
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.window-content').forEach(function(el) {
+                el.scrollTop = 0;
+            });
+            // Reset resume PDF to top
+            const iframe = document.getElementById('resumeIframe');
+            if (iframe) { iframe.src = iframe.src; }
+        });
+
         // Music bar title: only scroll if text overflows, title only, not on mobile
         (function() {
             var info = document.querySelector('.music-bar-info');
