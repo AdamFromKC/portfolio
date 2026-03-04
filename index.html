@@ -33,9 +33,12 @@
             cursor: default;
         }
         
-        /* Hide mobile content on desktop */
-        .mobile-content {
-            display: none;
+        code {
+            font-family: 'VT323', monospace;
+            font-size: 1em;
+            background: rgba(0,0,0,0.08);
+            padding: 1px 5px;
+            border: 1px solid rgba(0,0,0,0.2);
         }
 
         /* Menu Bar */
@@ -544,11 +547,12 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
-        .music-bar-info:hover .music-bar-title {
+
+        .music-bar-title.scrolling {
             animation: scrollText 10s linear infinite;
+            text-overflow: clip;
         }
-        
+
         @keyframes scrollText {
             0%, 10% { transform: translateX(0); }
             90%, 100% { transform: translateX(-100%); }
@@ -560,10 +564,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-        
-        .music-bar-info:hover .music-bar-artist {
-            animation: scrollText 10s linear infinite;
         }
 
         .music-bar-controls {
@@ -985,9 +985,18 @@
         }
 
         .contact-icon {
-            font-size: 48px;
             min-width: 60px;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-icon canvas {
+            width: 48px;
+            height: 48px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
 
         .contact-details a {
@@ -1029,251 +1038,208 @@
         /* PDF Viewer */
         .pdf-viewer {
             width: 100%;
-            height: 500px;
+            height: 750px;
             border: 2px solid var(--mac-black);
             background: var(--mac-white);
         }
 
+        /* Mobile: keep music bar usable when pinch-zoomed */
+        /* Mobile icon grid - hidden on desktop */
+        .mobile-icon-grid {
+            display: none;
+            position: fixed;
+            top: 28px;
+            left: 0;
+            right: 0;
+            bottom: 82px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 16px;
+            padding: 24px 16px;
+            align-items: center;
+            justify-items: center;
+            z-index: 50;
+        }
+
+        .mobile-desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            text-align: center;
+            width: 90px;
+        }
+
+        .mobile-desktop-icon canvas {
+            width: 64px;
+            height: 64px;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .mobile-desktop-icon:active canvas {
+            filter: invert(1);
+        }
+
+        .mobile-icon-label {
+            font-size: 18px;
+            color: var(--mac-white);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            padding: 3px 8px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+
         @media (max-width: 768px) {
-            /* Hide desktop UI */
-            .menu-bar,
-            .desktop-icons,
-            .taskbar,
-            .window {
+            body {
+                overflow-x: hidden;
+            }
+
+            /* Hide desktop right-column icons */
+            .desktop-icons {
                 display: none !important;
             }
-            
-            /* Allow scrolling on mobile */
-            body {
-                overflow-y: auto;
-                overflow-x: hidden;
-                padding: 20px;
-                padding-bottom: 100px;
+
+            /* Show mobile icon grid */
+            .mobile-icon-grid {
+                display: grid !important;
             }
-            
-            /* Show mobile content */
-            .mobile-content {
-                display: block !important;
+
+            /* Windows become full-screen overlays */
+            .window {
+                resize: none !important;
+                min-width: unset !important;
             }
-            
-            .mobile-section {
-                background: var(--mac-white);
-                border: 2px solid var(--mac-black);
-                padding: 20px;
-                margin-bottom: 20px;
-                box-shadow: var(--window-shadow);
+
+            .window.active:not(.animate-close):not(.animate-minimize) {
+                position: fixed !important;
+                top: 28px !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: calc(100dvh - 28px - 110px) !important;
+                max-height: calc(100dvh - 28px - 110px) !important;
+                max-width: 100vw !important;
+                resize: none !important;
+                border-left: none !important;
+                border-right: none !important;
+                overflow: hidden !important;
             }
-            
-            .mobile-section h2 {
-                font-size: 26px;
-                margin-bottom: 15px;
-                padding-bottom: 10px;
-                border-bottom: 2px solid var(--mac-black);
+
+            /* Bigger titlebar for touch */
+            .window-titlebar {
+                padding: 8px 6px;
+                height: 46px;
             }
-            
-            .mobile-section h3 {
+
+            .window-control {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 18px !important;
+            }
+
+            .window-controls .window-control:not(:first-child) {
+                display: none !important;
+            }
+
+            .window-title {
                 font-size: 22px;
-                margin: 20px 0 10px 0;
             }
-            
-            .mobile-section p,
-            .mobile-section li {
-                font-size: 18px;
-                line-height: 1.6;
-                margin-bottom: 12px;
+
+            /* Scrollable content on mobile */
+            .window-content {
+                height: calc(100% - 46px);
+                -webkit-overflow-scrolling: touch;
             }
-            
-            .mobile-section ul {
-                margin-left: 20px;
-            }
-            
-            .mobile-section a {
-                color: var(--mac-blue);
-                text-decoration: underline;
-            }
-            
-            .mobile-tagline {
-                background: var(--mac-gray);
-                border: 2px solid var(--mac-black);
-                padding: 20px;
-                margin-bottom: 20px;
-                text-align: center;
-                font-size: 19px;
-            }
-            
-            .mobile-header {
-                text-align: center;
-                background: var(--mac-gray);
-                padding: 30px 20px;
-            }
-            
-            .mobile-header h1 {
-                font-size: 32px;
-                margin-bottom: 10px;
-            }
-            
-            .mobile-header p {
-                font-size: 20px;
-            }
-            
-            .contact-item {
-                margin-bottom: 15px;
-                padding: 15px;
-                background: var(--mac-gray);
-                border: 2px solid var(--mac-black);
-            }
-            
-            /* Music player on mobile */
+
+            /* Music bar - compact two-row layout */
             .music-player-bar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                width: 100%;
-                max-width: 100%;
-                flex-wrap: wrap;
-                padding: 10px;
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 110px !important;
+                flex-wrap: wrap !important;
+                padding: 6px 12px !important;
+                border-right: none !important;
+                align-content: center;
+                gap: 6px !important;
             }
-            
-            .music-bar-toggle,
-            .music-bar-album-art,
-            .music-bar-library-btn {
-                display: none;
+
+            .pdf-viewer { display: none !important; }
+            .music-bar-toggle { display: none !important; }
+            .music-bar-library-btn { display: none !important; }
+
+            .music-bar-album-art {
+                width: 44px !important;
+                height: 44px !important;
+                flex-shrink: 0;
             }
-            
+
             .music-bar-info {
                 flex: 1;
-                min-width: 100%;
-                text-align: center;
-                margin-bottom: 8px;
+                min-width: 0;
+                overflow: hidden;
             }
-            
-            .music-bar-title {
-                font-size: 18px;
+
+            .music-bar-title { font-size: 16px; animation: none !important; }
+            .music-bar-artist { font-size: 13px; }
+
+            .music-bar-controls {
+                flex-shrink: 0;
+                gap: 4px !important;
             }
-            
-            .music-bar-artist {
-                font-size: 14px;
+
+            .music-bar-btn {
+                width: 38px !important;
+                height: 38px !important;
             }
-            
+
             .seek-bar-container {
-                flex: 1;
                 min-width: 100%;
                 order: 3;
-                margin-top: 8px;
-            }
-            
-            .music-bar-controls {
-                order: 2;
-                margin: 0 auto;
+                gap: 6px;
             }
 
-            .project-grid {
-                grid-template-columns: 1fr;
+            /* Hide taskbar - icon grid is the nav on mobile */
+            .taskbar {
+                display: none !important;
             }
 
-            .metrics {
-                grid-template-columns: 1fr;
+            /* Tap-friendly menu items */
+            .apple-logo { pointer-events: none !important; }
+            .apple-logo .menu-dropdown { display: none !important; }
+
+            .menu-bar-items {
+                gap: 8px;
+            }
+
+            .menu-item {
+                padding: 4px 8px;
+                font-size: 16px;
+            }
+
+            /* Mobile dropdowns open on tap via JS */
+            .menu-dropdown {
+                top: 28px;
+            }
+
+            .menu-dropdown-item {
+                padding: 14px 15px;
+                font-size: 18px;
             }
         }
         
     </style>
 </head>
 <body>
-    <!-- Mobile Layout (hidden on desktop) -->
-    <div class="mobile-content" style="display: none;">
-        <div class="mobile-section" style="text-align: center; background: var(--mac-gray); padding: 30px 20px;">
-            <h1 style="font-size: 32px; margin-bottom: 10px;">ADAM RIDINGS</h1>
-            <p style="font-size: 20px; margin-bottom: 15px;"><strong>Product Marketing for AI Companies</strong></p>
-            <p style="font-size: 18px;">> I code neural networks at night and run marketing campaigns by day</p>
-        </div>
-        
-        <div class="mobile-section">
-            <h2>WHAT MAKES ME DIFFERENT</h2>
-            <ul>
-                <li>I implement neural networks from scratch in NumPy (CNNs, transformers, LSTMs). I've built LLM applications. I read research papers and follow technical discussions about model architecture. I understand how these systems actually work.</li>
-                <li>I've managed $2.24M in marketing spend that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen campaigns that increased demo requests 40% and form conversions 30%. I know what works in both B2C and B2B.</li>
-                <li>I translate between technical teams and buyers. I understand what makes the product technically differentiated, then turn that into positioning and messaging that drives adoption. That's product marketing for AI companies.</li>
-                <li>MS in Data Science & AI, graduating May 2026. Four years managing marketing budgets and campaigns. Looking for product marketing roles where technical depth matters.</li>
-            </ul>
-            <p style="margin-top: 20px;">I built this site myself. The music player parses MP3 metadata, the windows are draggable and animated, everything works without frameworks.</p>
-        </div>
-        
-        <div class="mobile-section">
-            <h2>WHY THIS COMBINATION WORKS</h2>
-            <p>Product marketing for AI companies requires understanding the technology well enough to know what's actually differentiated, and having the marketing experience to turn that into positioning that drives revenue. Most people have one or the other. I have both.</p>
-            <p>I implement neural networks from scratch to understand how they actually work, not just how to use the APIs. I run marketing campaigns with real budgets to learn what converts and what doesn't. Both are valuable for AI product marketing.</p>
-            
-            <h3>WHAT I BRING:</h3>
-            <ul>
-                <li><strong>Technical depth:</strong> I've implemented CNNs, LSTMs, and transformers in NumPy. I've built LLM applications. I read AI research papers and understand what's novel versus hype. When engineering discusses model architecture or training challenges, I follow and ask informed questions.</li>
-                <li><strong>Marketing execution:</strong> I've managed $2.24M in marketing budgets that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen that increased demos 40%. I understand conversion optimization, marketing automation, A/B testing, and how to build systems that scale.</li>
-                <li><strong>Product marketing focus:</strong> I focus on positioning, messaging, competitive analysis, and sales enablement (not just campaign execution). I take technical capabilities and turn them into clear value propositions that resonate with buyers who care about outcomes, not features.</li>
-                <li><strong>The translation skill:</strong> I sit with engineers and understand technical tradeoffs, then write positioning that makes sense to non-technical buyers. That's what product marketing for AI companies requires.</li>
-            </ul>
-        </div>
-        
-        <div class="mobile-section">
-            <h2>WORK EXPERIENCE</h2>
-            
-            <h3>Medicare Marketing @ Blue Cross Blue Shield of Kansas</h3>
-            <p style="color: #666; margin-bottom: 10px;">2023-PRESENT • PRODUCT MARKETING STRATEGIST</p>
-            <p><strong>$2.24M Budget | 150K+ Enrollments | 3 Product Lines</strong></p>
-            <p>Managing Medicare marketing across Medicare Advantage, Supplement, and Part D products. Allocated $2.24M budget across channels, managed direct mail campaigns (60%+ of enrollments), digital advertising, events, and CMS compliance process.</p>
-            
-            <h3 style="margin-top: 30px;">Demand Generation @ Mekorma (B2B SaaS)</h3>
-            <p style="color: #666; margin-bottom: 10px;">B2B SAAS • PAYMENTS • MARKETING OPS</p>
-            <p><strong>40% Increase in Demos | 30% Increase in Conversions</strong></p>
-            <p>Optimized demand generation for payments automation software. Reduced form fields from 9 to 4 (30% conversion increase), built industry-specific landing pages, implemented HubSpot nurture sequences, ran webinar program that became highest-performing lead gen channel.</p>
-        </div>
-        
-        <div class="mobile-section">
-            <h2>TECHNICAL PROJECTS</h2>
-            
-            <h3>Neural Networks from Scratch</h3>
-            <p style="color: #666; margin-bottom: 10px;">COMPUTER VISION • DEEP LEARNING • NUMPY</p>
-            <p>Implemented CNNs (LeNet-5, Mini-VGG) using only NumPy. Coded backpropagation, convolution operations, and optimization algorithms from equations. Achieved 70%+ accuracy on CIFAR-10 by understanding the actual math, not just framework APIs.</p>
-            
-            <h3 style="margin-top: 25px;">Sarcasm Detection System</h3>
-            <p style="color: #666; margin-bottom: 10px;">NLP • LLMs • COMPARATIVE ANALYSIS</p>
-            <p>Compared traditional neural networks (RNN/LSTM) vs. LLM prompting for sarcasm detection. Analyzed accuracy vs. computational cost tradeoffs. Traditional models were faster and cheaper, LLMs more accurate but expensive.</p>
-            
-            <h3 style="margin-top: 25px;">This Portfolio Website</h3>
-            <p style="color: #666; margin-bottom: 10px;">WEB DEVELOPMENT • UI/UX • AUDIO PROCESSING</p>
-            <p>Built in vanilla HTML/CSS/JS with draggable windows, MP3 metadata parsing, pixel art icons, and retro Mac OS design. Zero frameworks. Shows understanding of DOM manipulation, event handling, state management, and browser APIs.</p>
-        </div>
-        
-        <div class="mobile-section">
-            <h2>SKILLS</h2>
-            
-            <h3>Product Marketing & GTM</h3>
-            <p>Campaign Strategy • Product Positioning • Go-to-Market Planning • Competitive Analysis • Sales Enablement • Customer Research • Messaging & Copy • Budget Management ($2M+) • A/B Testing • Multi-Channel Campaigns • Stakeholder Management • Performance Analytics</p>
-            
-            <h3>AI/ML & Data Science</h3>
-            <p>Python (pandas, NumPy, scikit-learn) • Deep Learning (TensorFlow, PyTorch, Keras) • Neural Networks (CNNs, RNNs, Transformers) • Natural Language Processing • LLM Prompting & Evaluation • Model Training & Optimization • Computer Vision • Statistical Analysis • Data Visualization • SQL/NoSQL (MongoDB) • Git/GitHub • API Integration</p>
-            
-            <h3>Marketing Tools & Platforms</h3>
-            <p>HubSpot (Marketing & CRM) • Google Analytics • Adobe Analytics • Salesforce CRM • Adobe Creative Suite • Figma • Canva • Workfront (Project Mgmt) • CMS Platforms • Email Automation • Landing Page Optimization • SEO/SEM</p>
-        </div>
-        
-        <div class="mobile-section">
-            <h2>CONTACT</h2>
-            <div class="contact-item">
-                <strong>Email</strong><br>
-                <a href="mailto:adamridings98@gmail.com">adamridings98@gmail.com</a>
-            </div>
-            <div class="contact-item">
-                <strong>LinkedIn</strong><br>
-                <a href="https://www.linkedin.com/in/adamridings/" target="_blank">linkedin.com/in/adamridings</a>
-            </div>
-            <div class="contact-item">
-                <strong>Phone</strong><br>
-                <a href="tel:8168636941">(816) 863-6941</a>
-            </div>
-            <p style="margin-top: 20px;"><strong>Looking for:</strong> Product marketing roles at AI/ML companies where technical depth actually helps.</p>
-        </div>
-    </div>
-    
     <!-- Desktop Layout -->
     <!-- Classic Startup Animation -->
     <!-- Menu Bar -->
@@ -1351,8 +1317,8 @@
                     <div class="menu-dropdown-item" onclick="togglePlay()">Pause Song</div>
                 </div>
             </div>
-            <div class="menu-time" id="clock">12:00 PM</div>
         </div>
+        <div class="menu-time" id="clock">12:00 PM</div>
     </div>
 
     <!-- Desktop -->
@@ -1397,9 +1363,49 @@
             </div>
         </div>
 
+        <!-- Mobile Icon Grid (hidden on desktop, shown on mobile) -->
+        <div class="mobile-icon-grid">
+            <div class="mobile-desktop-icon" onclick="openWindow('welcome', this)">
+                <canvas id="mob-icon-readme" width="48" height="48"></canvas>
+                <div class="mobile-icon-label">README</div>
+            </div>
+            <div class="mobile-desktop-icon" onclick="openWindow('about', this)">
+                <canvas id="mob-icon-about" width="48" height="48"></canvas>
+                <div class="mobile-icon-label">About Me</div>
+            </div>
+            <div class="mobile-desktop-icon" onclick="openWindow('work', this)">
+                <canvas id="mob-icon-work" width="48" height="48"></canvas>
+                <div class="mobile-icon-label">Work</div>
+            </div>
+            <div class="mobile-desktop-icon" onclick="openWindow('projects', this)">
+                <canvas id="mob-icon-projects" width="48" height="48"></canvas>
+                <div class="mobile-icon-label">Projects</div>
+            </div>
+            <div class="mobile-desktop-icon" onclick="openWindow('skills', this)">
+                <canvas id="mob-icon-skills" width="48" height="48"></canvas>
+                <div class="mobile-icon-label">Skills</div>
+            </div>
+            <div class="mobile-desktop-icon" onclick="openWindow('contact', this)">
+                <canvas id="mob-icon-contact" width="48" height="48"></canvas>
+                <div class="mobile-icon-label">Contact</div>
+            </div>
+            <div class="mobile-desktop-icon" onclick="openWindow('resume', this)">
+                <canvas id="mob-icon-resume" width="48" height="48"></canvas>
+                <div class="mobile-icon-label">Resume</div>
+            </div>
+            <div class="mobile-desktop-icon" onclick="openWindow('music', this)">
+                <canvas id="mob-icon-music" width="48" height="48"></canvas>
+                <div class="mobile-icon-label">Music</div>
+            </div>
+            <div class="mobile-desktop-icon" onclick="window.open('https://www.linkedin.com/in/adamridings/', '_blank')">
+                <canvas id="mob-icon-linkedin" width="48" height="48"></canvas>
+                <div class="mobile-icon-label">LinkedIn</div>
+            </div>
+        </div>
+
         <!-- Welcome Window -->
-        <div id="welcome" class="window active" onclick="bringToFront('welcome')" style="top: 80px; left: 50px; width: 700px; height: 500px;">
-            <div class="window-titlebar" onmousedown="startDrag(event, 'welcome')">
+        <div id="welcome" class="window" onclick="bringToFront('welcome')" style="top: 80px; left: 50px; width: 700px; height: 500px;">
+            <div class="window-titlebar" onmousedown="startDrag(event, 'welcome')" ontouchstart="startDrag(event, 'welcome')">
                 <div class="window-controls">
                     <div class="window-control" onclick="closeWindow('welcome')" title="Close">✕</div>
                     <div class="window-control" onclick="minimizeWindow('welcome')" title="Minimize">_</div>
@@ -1410,36 +1416,36 @@
             <div class="window-content">
                 <div class="welcome-header">
                     <h1>ADAM RIDINGS</h1>
-                    <p>Product Marketing for AI Companies</p>
+                    <p>Technical Product Marketing Manager</p>
                 </div>
 
                 <div class="tagline">
-                    > I code neural networks at night and run marketing campaigns by day
+                    > I build neural networks at night and drive go-to-market strategy by day
                 </div>
 
                 <div class="quick-facts">
                     <h3>WHAT MAKES ME DIFFERENT:</h3>
                     <ul>
-                        <li>I implement neural networks from scratch in NumPy—CNNs, transformers, LSTMs. I've built LLM applications. I can read research papers and follow technical discussions about model architecture. This isn't surface-level AI knowledge.</li>
-                        <li>I've managed $2.24M in marketing spend that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen campaigns that increased demo requests 40% and form conversions 30%. I understand both direct-to-consumer and enterprise go-to-market.</li>
-                        <li>I can translate between technical teams and buyers. I understand what makes the product technically differentiated, then turn that into positioning and messaging that drives adoption. That's the core of product marketing for AI companies.</li>
-                        <li>MS in Data Science & AI, graduating May 2026. Four years managing marketing budgets and campaigns. Looking for product marketing roles where technical depth is an advantage, not a nice-to-have.</li>
+                        <li><strong>I market from the inside out.</strong> I don't rely on generic AI buzzwords to sell a product. Because I am actively building neural networks and LLM applications from scratch, I can read the engineering documentation, identify the actual technical differentiator, and translate it into a narrative that buyers care about.</li>
+                        <li><strong>I build growth engines instead of just assets.</strong> I treat product marketing as a core revenue driver. Whether I am optimizing B2B SaaS workflows to increase demo requests by 40% or managing a $2.24M acquisition budget for complex healthcare plans, I focus strictly on the metrics that impact the bottom line.</li>
+                        <li><strong>I act as the ultimate cross-functional translator.</strong> I can debate model architecture with your development team in the morning and present a high-converting go-to-market strategy to sales leadership in the afternoon. I sit right at the intersection of product, engineering, and sales to ensure the messaging is unified.</li>
+                        <li><strong>I thrive on market complexity.</strong> From heavily regulated enterprise environments to highly technical software, I have spent the last four years proving that I can take complicated products and make them incredibly easy for users to understand and adopt.</li>
                     </ul>
                 </div>
 
                 <p style="margin-top: 20px; font-size: 19px;">
-                    <strong>See the work and projects for details.</strong>
+                    <strong>Click on the desktop icons to learn more about me and my professional and graduate program work.</strong>
                 </p>
 
                 <p style="margin-top: 15px; font-size: 19px; color: #666;">
-                    I built this site myself—the music player parses MP3 metadata, the windows are draggable and animated, everything works without frameworks.
+                    <strong>A quick note on this site:</strong> I believe in fully understanding the technology I market. I built this entire retro OS interface from scratch using vanilla code. There are no underlying frameworks. Every draggable window, custom animation, and even the MP3 player was built from the ground up.
                 </p>
             </div>
         </div>
 
         <!-- About Window -->
         <div id="about" class="window" onclick="bringToFront('about')" style="top: 100px; left: 100px; width: 650px; height: 500px;">
-            <div class="window-titlebar" onmousedown="startDrag(event, 'about')">
+            <div class="window-titlebar" onmousedown="startDrag(event, 'about')" ontouchstart="startDrag(event, 'about')">
                 <div class="window-controls">
                     <div class="window-control" onclick="closeWindow('about')" title="Close">✕</div>
                     <div class="window-control" onclick="minimizeWindow('about')" title="Minimize">_</div>
@@ -1448,41 +1454,43 @@
                 <div class="window-title">About Me</div>
             </div>
             <div class="window-content">
-                <h2 style="font-size: 28px; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">WHY THIS COMBINATION WORKS</h2>
-                
+                <h2 style="font-size: 28px; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">BEYOND THE RESUME</h2>
+
                 <p style="font-size: 19px; margin-bottom: 20px;">
-                    Product marketing for AI companies requires understanding the technology well enough to know what's actually differentiated, 
-                    and having the marketing experience to turn that into positioning that drives revenue. Most people have one or the other. I have both.
+                    I've always loved the psychology of marketing, but as the industry shifted, I realized something important: you can't effectively market the future if you don't understand how it's built.
                 </p>
-                
+
                 <p style="font-size: 19px; margin-bottom: 20px;">
-                    I implement neural networks from scratch because that's the only way to really understand how they work. I run marketing 
-                    campaigns with real budgets because that's how you learn what actually converts. This combination is useful for AI product marketing.
+                    I spent four years building go-to-market strategies, managing multi-million dollar budgets, and driving revenue for complex products. But when AI began to reshape the software landscape, I didn't want to just memorize new buzzwords. I wanted to look under the hood.
+                </p>
+
+                <p style="font-size: 19px; margin-bottom: 20px;">
+                    That curiosity led me to pursue my MS in Data Science & Artificial Intelligence. Now, I spend my days writing positioning strategies and my nights writing Python and training neural networks. I built this retro desktop interface as a fun way to combine those two worlds.
                 </p>
 
                 <div class="quick-facts">
-                    <h3>WHAT I BRING:</h3>
+                    <h3>WHEN I'M NOT LAUNCHING PRODUCTS (OR TRAINING MODELS):</h3>
                     <ul>
-                        <li><strong>Technical depth:</strong> I've implemented CNNs, LSTMs, and transformers in NumPy. I've built LLM applications. I can read AI research papers and understand what's novel versus hype. When engineering discusses model architecture or training challenges, I can follow and ask informed questions.</li>
-                        <li><strong>Marketing execution:</strong> I've managed $2.24M in marketing budgets that drove 150K+ enrollments in healthcare. I've run B2B SaaS demand gen that increased demos 40%. I understand conversion optimization, marketing automation, A/B testing, and how to build systems that scale.</li>
-                        <li><strong>Product marketing focus:</strong> I focus on positioning, messaging, competitive analysis, and sales enablement—not just campaign execution. I can take technical capabilities and turn them into clear value propositions that resonate with buyers who care about outcomes, not features.</li>
-                        <li><strong>The translation skill:</strong> I can sit with engineers and understand technical tradeoffs, then write positioning that makes sense to non-technical buyers. That's what product marketing for AI companies actually requires.</li>
+                        <li><strong>Kansas City Roots:</strong> Based in the KCMO area. Always cheering for the Chiefs and Royals, indulging in local BBQ spots, or just enjoying the city with my goldendoodle, Macie.</li>
+                        <li><strong>Collecting:</strong> I'm an avid vinyl and trading card collector. You can usually find me hunting down pressings from some of my favorite artists or trying to find fun looking Pokemon and One Piece trading cards.</li>
+                        <li><strong>Out of Office:</strong> I try to travel and disconnect whenever my schedule allows. I recently spent some time exploring Miami and San Juan, and I'm planning on visiting Japan in the near future. I'm a firm believer that a trip every once in a while helps refresh your energy and makes both your personal and work lives more fun.</li>
+                        <li><strong>Gaming:</strong> I've loved gaming my whole life. When I was a kid, I would play Spyro and Ape Escape on my PS1 (Fun fact: During my preschool graduation, they announced what you wanted to be when you grew up. I said I wanted to be a "Guy who makes video games."). These days, I'm normally playing something on either my PS5 Pro or my 5080 gaming PC that I built myself. My top 5 favorite games of all time are:
+                            <ul style="margin-top: 8px; margin-left: 20px;">
+                                <li>The Last of Us Part I</li>
+                                <li>Call of Duty 4: Modern Warfare</li>
+                                <li>Fallout: New Vegas</li>
+                                <li>Splinter Cell: Chaos Theory</li>
+                                <li>Mass Effect 2</li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
-
-                <p style="font-size: 19px; margin-top: 20px;">
-                    <strong>What I'm looking for:</strong> Product marketing roles at AI companies where technical understanding helps with positioning, messaging, and go-to-market execution.
-                </p>
-
-                <p style="font-size: 19px; margin-top: 15px; color: #666;">
-                    MS in Data Science & AI, graduating May 2026.
-                </p>
             </div>
         </div>
 
         <!-- Work Window -->
         <div id="work" class="window" onclick="bringToFront('work')" style="top: 120px; left: 120px; width: 750px; height: 600px;">
-            <div class="window-titlebar" onmousedown="startDrag(event, 'work')">
+            <div class="window-titlebar" onmousedown="startDrag(event, 'work')" ontouchstart="startDrag(event, 'work')">
                 <div class="window-controls">
                     <div class="window-control" onclick="closeWindow('work')" title="Close">✕</div>
                     <div class="window-control" onclick="minimizeWindow('work')" title="Minimize">_</div>
@@ -1496,21 +1504,29 @@
                     <h2 style="font-size: 28px; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">MARKETING WORK</h2>
 
                     <div class="case-study">
-                        <h3>Medicare Marketing @ Blue Cross Blue Shield of Kansas</h3>
+                        <h3>Medicare Marketing @ Blue Cross and Blue Shield of Kansas</h3>
                         <span class="case-tag">HEALTHCARE • REGULATED INDUSTRY • B2C</span>
                         
-                        <p style="margin: 15px 0;">Managing $2.24M in marketing spend across Medicare products. Drove 150K+ enrollments in a highly regulated environment.</p>
+                        <p style="margin: 15px 0;">Managed $2.24M in marketing spend across Medicare products. Drove 150K+ enrollments in a highly regulated environment.</p>
                         
                         <button class="mac-button" onclick="showWorkDetail('bcbs')" style="margin-top: 10px;">Read More →</button>
                     </div>
 
                     <div class="case-study">
-                        <h3>Demand Generation @ Mekorma (B2B SaaS)</h3>
+                        <h3>Demand Generation @ Mekorma</h3>
                         <span class="case-tag">B2B SAAS • PAYMENTS • MARKETING OPS</span>
                         
                         <p style="margin: 15px 0;">Increased demo requests by 40% and form conversions by 30% through systematic optimization and testing.</p>
                         
                         <button class="mac-button" onclick="showWorkDetail('mekorma')" style="margin-top: 10px;">Read More →</button>
+                    </div>
+
+                    <div class="case-study">
+                        <h3>Digital Strategy & Portfolio Management @ Cohen-Esrey</h3>
+                        <span class="case-tag">REAL ESTATE • DIGITAL MARKETING • B2C</span>
+                        
+                        <p style="margin: 15px 0;">Directed full-cycle digital marketing strategy and execution across a portfolio of 80+ properties.</p>
+                        <button class="mac-button" onclick="showWorkDetail('cohen')" style="margin-top: 10px;">Read More →</button>
                     </div>
                 </div>
 
@@ -1518,7 +1534,7 @@
                 <div id="work-detail-bcbs" class="work-detail" style="display: none;">
                     <button class="mac-button" onclick="showWorkMain()" style="margin-bottom: 20px;">← Back to All Work</button>
                     
-                    <h2 style="font-size: 28px; margin-bottom: 10px;">Medicare Marketing @ Blue Cross Blue Shield of Kansas</h2>
+                    <h2 style="font-size: 28px; margin-bottom: 10px;">Medicare Marketing @ Blue Cross and Blue Shield of Kansas</h2>
                     <span class="case-tag">2023-PRESENT • PRODUCT MARKETING STRATEGIST</span>
                     
                     <div class="metrics" style="margin: 20px 0;">
@@ -1536,48 +1552,39 @@
                         </div>
                     </div>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Challenge</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Go-To-Market Challenge</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        Medicare marketing is complex. You're managing multiple product lines (Medicare Advantage, Supplement, Part D), 
-                        strict CMS compliance rules, tight AEP/OEP enrollment windows, and a demographic that spans tech-savvy boomers 
-                        to seniors who've never used email. Oh, and you're spending $2M+ of the company's money while doing it.
+                        Medicare isn't just a marketing channel; it's a massive, high-stakes puzzle. You're trying to sell complex healthcare products to a demographic that ranges from tech-savvy boomers to seniors who don't even own a computer. Add in strict federal compliance laws, three distinct product lines, a condensed annual enrollment window, and an active $2.24M budget. You have a recipe that requires absolute precision. I had to build a go-to-market machine that worked perfectly under intense pressure.
                     </p>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">What I Actually Did</h3>
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Budget Allocation & Strategy:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>How I allocated $2.24M:</strong> Built budget models in Excel comparing cost-per-enrollment across channels. Analyzed last year's performance, identified which products had best margins, which channels drove quality leads. Reallocated spend mid-season when digital was outperforming direct mail 2:1.</li>
-                        <li><strong>Balancing three product lines:</strong> Medicare Advantage got 60% of budget (highest enrollment volume), Supplement got 25% (higher margin, niche audience), Part D got 15% (defensive play to keep existing members). Adjusted monthly based on enrollment pace vs. goals.</li>
-                        <li><strong>Competitive response:</strong> Monitored competitor campaigns (what they mailed, when, what they offered). Adjusted our messaging and timing to differentiate—when competitors led with $0 premium, we emphasized network breadth and customer service ratings.</li>
-                    </ul>
-
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Campaign Execution:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>Direct mail campaigns (primary driver):</strong> Managed 6-8 mail drops per enrollment period. This was our highest-performing channel by far—direct mail consistently drove 60%+ of total enrollments. Wrote creative briefs, reviewed designs, approved copy. Segmented lists by age, geography, current plan status. Tested personalization (variable data printing with member name, current plan, recommended plan). Tracked response rates by drop, segment, and creative version.</li>
-                        <li><strong>Digital advertising (supporting channel):</strong> Ran paid search (Google Ads targeting Medicare keywords), display retargeting, Facebook/Instagram (targeted 65+ with health/retirement interests). Built custom landing pages for each campaign with unique tracking parameters. Digital complemented direct mail but never matched its performance.</li>
-                        <li><strong>Agent enablement:</strong> Created sales tools for 50+ insurance agents. Built product comparison sheets, handled objections guides, enrollment checklists. Updated materials weekly during AEP when CMS changed rules or competitors launched new plans. Hosted weekly calls to train agents on positioning.</li>
-                        <li><strong>Email nurture:</strong> Built automated sequences in Salesforce Marketing Cloud. 7-touch series for prospects who requested info but didn't enroll. Personalized based on which product they looked at, which materials they downloaded. Included educational content (Medicare 101) early, then stronger enrollment CTAs closer to deadlines.</li>
-                    </ul>
-
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Compliance Navigation:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>CMS approval process:</strong> Every marketing piece needs CMS approval. Submitted materials 60 days before use. CMS would come back with feedback ("can't say 'best,' need to add disclaimers, font too small"). Revised, resubmitted, waited another 2 weeks. Built timelines that accounted for this—started creative in March for October campaigns.</li>
-                        <li><strong>What you can't say:</strong> Can't use "free" (even for $0 premium plans), can't cherry-pick benefits without showing full benefit structure, can't use testimonials without specific disclaimers, can't target based on health conditions. Learned these rules inside and out so I could push creative boundaries without crossing compliance lines.</li>
-                        <li><strong>State regulations:</strong> Medicare rules vary by state. Kansas has additional requirements on font sizes, disclosure placement, contact information. Built templates that worked across all our markets while meeting strictest state requirements.</li>
-                    </ul>
-
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Results</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Product Positioning: Competing with "Free"</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        Drove 150K+ member enrollments across all Medicare products. Successfully managed budget to hit enrollment 
-                        targets while maintaining cost-per-enrollment efficiency. Built repeatable campaign framework that works 
-                        across enrollment periods.
+                        The biggest threat in our market is competitors launching $0 premium plans. You can't out-price "free," so I completely re-engineered our product positioning. Instead of fighting a losing battle on cost, I shifted our entire narrative. I dug into our actual differentiators and pivoted our messaging to highlight network breadth, superior customer service ratings, and long-term stability. We stopped selling a monthly premium and started selling absolute peace of mind.
                     </p>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">What I Learned</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Sales Enablement: Arming 1500+ Agents and Brokers</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        Marketing in heavily regulated industries requires a different skill set. You can't just "move fast and break things." 
-                        You need to understand compliance, work within constraints, and still find ways to differentiate. This experience 
-                        taught me how to operate in complex environments where the rules matter.
+                        A great marketing campaign falls apart if the sales team can't close the deal. I viewed our 1500+ insurance agents and brokers as my direct customers. I built the exact tools they needed to win. I developed comprehensive product comparison sheets, mapped out clear objection-handling guides, and created step-by-step enrollment checklists. I updated our materials in real time as new opportunities arose, and hosted weekly calls with our internal sales team to see what they needed from me.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Data-Driven Growth & Budget Strategy</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        Managing a $2.24M budget means you can't rely on gut feelings. I built dynamic cost-per-enrollment models in Excel to track every dollar. I allocated 60% of the budget to Medicare Advantage for sheer volume, 25% to Supplement plans for higher margins, and 15% to Part D to defend our existing member base. When my data showed that digital channels were outperforming direct mail by a two-to-one margin mid-season, I didn't hesitate. I instantly reallocated spend to maximize our return and scale our most efficient growth levers.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Execution in a Regulated Sandbox</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        In healthcare, every single word you write has legal consequences. The Centers for Medicare and Medicaid Services requires a 60-day approval buffer for all marketing materials. You can't use the word "free," you can't cherry-pick benefits, and you can't use testimonials without heavy disclaimers. I learned the federal and state regulations so thoroughly that they became a second language. This allowed me to push our creative boundaries to the absolute limit without ever crossing a compliance line or delaying a campaign launch.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Impact</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        The strategy is working. We've driven over 150,000 member enrollments across our product lines, hit our most aggressive targets, and maintained strict cost-per-enrollment efficiency. I built a repeatable campaign framework that continues to scale across our current and future enrollment periods.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The PMM Takeaway</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        This role is the ultimate proving ground for market complexity. It proves that I can take heavily regulated, highly complicated products and translate them into simple, high-converting narratives. Whether it is healthcare or artificial intelligence, I know how to navigate the constraints, align the sales team, and build a go-to-market engine that actually drives revenue.
                     </p>
 
                     <div class="tags" style="margin-top: 20px;">
@@ -1612,50 +1619,34 @@
                         </div>
                     </div>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Challenge</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Go-To-Market Challenge</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        Mekorma builds payments automation software for finance teams. The product is technical (integrates with Dynamics GP), 
-                        the buying cycle is long, and the audience is conservative (finance people don't like risk). We needed more demos, 
-                        better conversion rates, and a way to establish thought leadership in a crowded space.
+                        Mekorma builds payment automation software that integrates deeply with Microsoft Dynamics GP. The target audience is finance professionals. They are conservative, highly risk-averse, and care entirely about compliance and ROI. I stepped in to accelerate a long B2B buying cycle, increase demo requests, and build a measurable demand generation engine from scratch.
                     </p>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">What I Actually Did</h3>
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Landing Page & Conversion Optimization:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>Form optimization:</strong> Original landing page had 9 form fields. Way too much friction. Reduced to 4 fields (name, email, company, phone). Conversions increased 30%.</li>
-                        <li><strong>Heatmap analysis:</strong> Used Hotjar to see where people were getting stuck. Found people scrolling past our feature list without reading. They were looking for pricing, which was buried below the fold. Moved pricing higher, added "See Pricing" CTA. Conversions jumped. Also saw people rage-clicking on non-clickable elements—turned them into actual CTAs.</li>
-                        <li><strong>Copy rewrites:</strong> Original copy was feature-focused ("integrates with Dynamics GP, supports ACH and check printing"). Rewrote to pain-focused: "Your AP team spends 40 hours/month manually processing payments. What if they could do it in 4?" Added specific ROI calculator showing time/cost savings.</li>
-                        <li><strong>Dedicated landing pages:</strong> Built separate pages for manufacturing (emphasized vendor payment complexity), healthcare (emphasized compliance/audit trails), professional services (emphasized cash flow management). Matched messaging to industry pain points. Traffic from manufacturing page converted 2x better than generic page.</li>
-                    </ul>
-
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Email Nurture & Marketing Automation:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>How I built the nurture sequences:</strong> Mapped the buyer journey in HubSpot. New lead gets 7-email sequence over 30 days: Email 1 (welcome + educational content), Email 3 (case study), Email 5 (product demo video), Email 7 (strong CTA + time-limited offer). Used smart content to personalize based on industry, company size, which pages they visited.</li>
-                        <li><strong>Email A/B testing:</strong> Tested subject lines, send times, and email copy in HubSpot. Found that pain-focused subject lines ("Still processing payments manually?") outperformed feature-focused ones ("New integration with Dynamics GP") by 40%. Tested send times—Tuesday 10am performed best for our audience.</li>
-                        <li><strong>Behavioral triggers:</strong> If someone watched demo video but didn't book meeting, they got "Questions about the demo?" email with FAQ link. If they visited pricing page 3+ times, sales got notified for outreach. If they downloaded ROI calculator, they entered high-intent sequence with more aggressive CTAs.</li>
-                        <li><strong>Webinar follow-up flow:</strong> Attendees got thank you email with recording + slides. 3 days later: "Here's what we didn't have time to cover" with additional resources. 7 days later: "See it in action" with demo booking link. No-shows got "Sorry we missed you" with recording. These sequences drove 35% of webinar attendees to demo requests.</li>
-                        <li><strong>Segmentation strategy:</strong> Tagged contacts by industry, company size, engagement level, lifecycle stage. Built segments like "high-engagement manufacturing prospects" or "low-engagement healthcare customers" and sent targeted content. Open rates were 2x higher on segmented emails vs. batch-and-blast.</li>
-                    </ul>
-
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Webinar Program:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>Topic selection:</strong> Surveyed customer list and prospects about pain points. Top requests: fraud prevention, AP automation ROI, compliance/audit prep. Built webinar calendar around these topics. Added industry-specific sessions (healthcare compliance, manufacturing vendor management).</li>
-                        <li><strong>Promotion tactics:</strong> Email blasts to house list (3-touch: save-the-date, reminder, last chance). Paid LinkedIn ads targeting CFOs, controllers, AP managers at target company sizes. Posted in industry LinkedIn groups. Partner outreach (asked complementary vendors to promote to their lists in exchange for co-branding).</li>
-                        <li><strong>Presentation structure:</strong> 10 min industry trends/pain points, 25 min how Mekorma solves it (demo-heavy), 10 min case study, 15 min live Q&A. Recorded everything. Used polls throughout to keep engagement high and gather qualification data ("How many payments do you process monthly?" helped sales prioritize follow-ups).</li>
-                        <li><strong>The follow-up that actually worked:</strong> Within 24 hours: recording + slides + special offer for attendees only (waived implementation fee). Day 3: "Top questions from the webinar" blog post. Day 7: Direct outreach from sales to attendees who asked questions or stayed til the end (showed high intent). This converted 35% of attendees to demos.</li>
-                    </ul>
-
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Results</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Product Positioning & Conversion</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        Increased demo requests by 40% and form conversions by 30%. Webinar program became Mekorma's highest-performing 
-                        lead gen channel. Built a repeatable, data-driven demand gen system that continued to perform after I left.
+                        I realized our landing pages were speaking to the wrong part of the brain. They were heavily feature-focused. I rewrote the copy to attack specific pain points, shifting the narrative from technical specs to real-world outcomes (like saving an AP team 40 hours a month). I used Hotjar heatmaps to identify user friction, dropped our form fields from nine to four, and built dedicated landing pages tailored to specific industries. Traffic on our manufacturing page alone converted at twice the rate of our generic site.
                     </p>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">What I Learned</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Automated Pipeline Engineering</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        B2B SaaS marketing is all about understanding the buyer journey and removing friction at every step. You need to 
-                        test everything, measure everything, and optimize constantly. This role taught me how to build systems, use data 
-                        to make decisions, and think about marketing as a pipeline, not just campaigns.
+                        You can't just ask a CFO to buy enterprise software on day one. I mapped out the complete buyer journey and built a highly segmented, 30-day email nurture sequence in HubSpot. I didn't rely on generic email blasts. I set up behavioral triggers. If a prospect watched a demo video without booking a meeting, they received a targeted FAQ. If they visited our pricing page three times, our sales team received an instant notification to reach out. This level of intentional segmentation doubled our open rates.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Webinar Engine</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        To establish thought leadership, I surveyed our customers and built a quarterly webinar program around their biggest headaches, such as fraud prevention and audit preparation. I managed the entire lifecycle, from targeted LinkedIn ads to the final presentation structure. The real magic happened in the follow-up. By executing a strict post-webinar sequence and handing high-intent attendees directly to sales, we converted 35% of all attendees into actual product demos.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Impact</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        The systematic optimization and testing paid off. We increased total demo requests by 40% and boosted form conversions by 30%. The webinar program evolved into the highest-performing lead generation channel in the company, and I left behind a repeatable system that continued to perform long after my departure.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The PMM Takeaway</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        This experience fundamentally shaped how I view B2B software marketing. It taught me that buyers don't care about your tech stack; they care about how you solve their daily problems. I learned how to identify technical friction, build automated systems to remove it, and turn a highly skeptical audience into an active sales pipeline.
                     </p>
 
                     <div class="tags" style="margin-top: 20px;">
@@ -1669,13 +1660,67 @@
                     </div>
                 </div>
 
+                <div id="work-detail-cohen" class="work-detail" style="display: none;">
+                    <button class="mac-button" onclick="showWorkMain()" style="margin-bottom: 20px;">← Back to All Work</button>
+
+                    <h2 style="font-size: 28px; margin-bottom: 10px;">Digital Strategy & Portfolio Management @ Cohen-Esrey</h2>
+                    <span class="case-tag">REAL ESTATE • DIGITAL MARKETING • B2C</span>
+
+                    <div class="metrics" style="margin: 20px 0;">
+                        <div class="metric-box">
+                            <div class="metric-value">80+</div>
+                            <div class="metric-label">Communities Managed</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">1</div>
+                            <div class="metric-label">Sole Marketing Lead</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">95%</div>
+                            <div class="metric-label">Avg. Occupancy</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Portfolio Challenge</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        Managing digital marketing for a single apartment community is straightforward. Managing it for a portfolio of over 80 distinct properties across multiple markets is a massive logistical puzzle. I operated as the sole marketing lead for this entire portfolio. I had to build a scalable, centralized digital strategy that could adapt to highly localized markets while keeping lead volume consistently high for our property managers.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Operating at Scale</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        When you're a one-person marketing department for 80+ assets, you can't rely on manual processes or customized ad-hoc campaigns for every building. I had to build highly efficient systems. I centralized our digital advertising, managed vendor relationships, and created standardized marketing playbooks. If a property suddenly saw a dip in occupancy, I had a proven, repeatable campaign ready to deploy instantly to drive new pipeline.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Full-Funnel B2C Execution</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        Real estate marketing is an aggressive, fast-paced B2C funnel. I directed the entire digital lifecycle for these communities. I ran localized paid search and social campaigns, optimized individual property websites for local SEO, and managed digital reputation strategies across Google and Yelp. I didn't just drive generic web traffic; I made sure we were capturing high-intent local searchers and converting them into actual property tours.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Impact</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        By standardizing our digital strategy, I completely removed the friction from our localized marketing efforts. I successfully maintained strong occupancy rates across the portfolio and built a centralized marketing engine. This allowed our on-site property managers to focus entirely on closing leases instead of worrying about top-of-funnel lead generation.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The PMM Takeaway</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        This role taught me how to operate with absolute autonomy and execute at serious scale. It proved that I can manage a massive portfolio of varied products, identify exactly where a localized pipeline is breaking down, and deploy targeted campaigns to fix it. In the tech startup world, that ability to scale strategies across multiple user segments and operate entirely self-directed is exactly what it takes to successfully own a product line.
+                    </p>
+
+                    <div class="tags" style="margin-top: 20px;">
+                        <span class="tag">Portfolio Management</span>
+                        <span class="tag">Digital Strategy</span>
+                        <span class="tag">B2C</span>
+                        <span class="tag">Local SEO</span>
+                        <span class="tag">Vendor Management</span>
+                        <span class="tag">Autonomy</span>
+                    </div>
+                </div>
+
 
             </div>
         </div>
-
-        <!-- Projects Window -->
         <div id="projects" class="window" onclick="bringToFront('projects')" style="top: 140px; left: 140px; width: 750px; height: 600px;">
-            <div class="window-titlebar" onmousedown="startDrag(event, 'projects')">
+            <div class="window-titlebar" onmousedown="startDrag(event, 'projects')" ontouchstart="startDrag(event, 'projects')">
                 <div class="window-controls">
                     <div class="window-control" onclick="closeWindow('projects')" title="Close">✕</div>
                     <div class="window-control" onclick="minimizeWindow('projects')" title="Minimize">_</div>
@@ -1691,6 +1736,15 @@
                     <p style="font-size: 19px; margin-bottom: 25px;">
                         I build AI systems to understand how they work under the hood. Here are some examples.
                     </p>
+
+                    <div class="project-card">
+                        <h3>Steam Backlog & Goals Tracker</h3>
+                        <span class="case-tag">GENAI • GRAPHQL • MONGODB • LLM AGENTS</span>
+                        <p style="margin: 15px 0;">
+                            Engineered a full-stack AI assistant that translates natural language directly into executable GraphQL and MongoDB queries. Built a custom conversational state machine to handle multi-turn user intent, helping users conquer decision fatigue by turning their Steam library data into actionable gaming goals.
+                        </p>
+                        <button class="mac-button" onclick="showProjectDetail('steam')" style="margin-top: 10px;">Read More →</button>
+                    </div>
 
                     <div class="project-card">
                         <h3>Neural Networks from Scratch</h3>
@@ -1714,9 +1768,65 @@
                         <h3>This Portfolio Website</h3>
                         <span class="case-tag">WEB DEVELOPMENT • UI/UX • AUDIO PROCESSING</span>
                         <p style="margin: 15px 0;">
-                            Vanilla HTML/CSS/JS. Draggable windows, MP3 metadata parsing, pixel art, retro Mac OS design. Zero frameworks.
+                            Engineered a fully functional retro OS environment using vanilla JavaScript. Built custom state management for draggable windows, live MP3 metadata parsing, and animations without a single framework.
                         </p>
                         <button class="mac-button" onclick="showProjectDetail('portfolio')" style="margin-top: 10px;">Read More →</button>
+                    </div>
+                </div>
+
+                <!-- Detail Views -->
+                <div id="project-detail-steam" class="project-detail" style="display: none;">
+                    <button class="mac-button" onclick="showProjectsMain()" style="margin-bottom: 20px;">← Back to All Projects</button>
+
+                    <h2 style="font-size: 28px; margin-bottom: 10px;">Steam Backlog & Goals Tracker</h2>
+
+                    <div class="metrics" style="margin: 20px 0;">
+                        <div class="metric-box">
+                            <div class="metric-value" style="font-size: 20px;">Local AI</div>
+                            <div class="metric-label">Llama 3 via Ollama</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value" style="font-size: 20px;">GraphQL</div>
+                            <div class="metric-label">Custom Schema & Resolvers</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">0ms</div>
+                            <div class="metric-label">Latency Added by Cloud APIs</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The "Analysis Paralysis" Challenge</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        Steam libraries are notorious for becoming digital graveyards. Users buy games during sales but never play them, leading to decision fatigue. Existing tools are just glorified spreadsheets. I wanted to build an intelligent assistant that helps users actually play their games by setting concrete goals. I didn't want a static UI; I wanted a conversational interface where users could ask, "What should I play that takes less than 10 hours?" and get an immediate, data-backed answer.
+                    </p>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Architecture: The "Translator" Pattern</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">Most AI apps just pass user text to a chatbot. I architected a system that translates natural language into structured database queries.</p>
+                    <ul style="margin-left: 25px; font-size: 18px;">
+                        <li><strong>The Translation Layer (<code>llm_translator.py</code>):</strong> I engineered a custom system prompt for Llama 3 that teaches it my specific GraphQL schema. I used "few-shot learning" within the prompt to show the model how to convert vague requests like "show me short games" into precise filters like <code>average_playtime: { lt: 600 }</code>.</li>
+                        <li><strong>The API (<code>schema.py</code> & <code>resolvers.py</code>):</strong> Instead of rigid REST endpoints, I built a flexible GraphQL API using Ariadne. This allows the frontend to request exactly the data it needs—whether that's just a game title or a nested tree of games, goals, and completion statuses—in a single network request.</li>
+                        <li><strong>The Database:</strong> I used MongoDB to handle the nested relationships. My resolvers use complex aggregation pipelines to join user data with global game metadata, allowing for queries like "Show me RPGs I haven't played yet."</li>
+                    </ul>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Engineering Conversational State</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">A major challenge with LLMs is handling multi-turn conversations (like setting a specific goal).</p>
+                    <ul style="margin-left: 25px; font-size: 18px;">
+                        <li><strong>State Management:</strong> In <code>streamlit_app.py</code>, I built a custom state machine to track where the user is in a conversation flow (e.g., <code>SET_GOAL_AWAIT_GAME</code> → <code>SET_GOAL_AWAIT_HOURS</code> → <code>SET_GOAL_AWAIT_DEADLINE</code>).</li>
+                        <li><strong>Hybrid Processing:</strong> The app intelligently switches between the LLM (for understanding intent) and deterministic logic (for executing database writes). If the LLM detects a "Set Goal" intent, my code takes over to guide the user through the required form fields, ensuring data integrity.</li>
+                    </ul>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The PMM Takeaway</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">
+                        This project proves I understand the "Last Mile" of AI product development. It is easy to make a demo that chats; it is hard to make an AI that reliably interacts with a proprietary database. I understand how to design schemas for AI consumption, how to manage context in a stateless API, and how to bridge the gap between unstructured user intent and structured business logic.
+                    </p>
+
+                    <div class="tags" style="margin-top: 20px;">
+                        <span class="tag">GenAI</span>
+                        <span class="tag">GraphQL</span>
+                        <span class="tag">Prompt Engineering</span>
+                        <span class="tag">MongoDB</span>
+                        <span class="tag">Streamlit</span>
+                        <span class="tag">Llama 3</span>
                     </div>
                 </div>
 
@@ -1725,69 +1835,55 @@
                     <button class="mac-button" onclick="showProjectsMain()" style="margin-bottom: 20px;">← Back to All Projects</button>
                     
                     <h2 style="font-size: 28px; margin-bottom: 10px;">Neural Networks from Scratch</h2>
-                    <span class="case-tag">CS5720 NEURAL NETWORKS & DEEP LEARNING • FALL 2024</span>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Why This Is Hard</h3>
+                    <div class="metrics" style="margin: 20px 0;">
+                        <div class="metric-box">
+                            <div class="metric-value">0</div>
+                            <div class="metric-label">ML Frameworks Used</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">100%</div>
+                            <div class="metric-label">Math Derived by Hand</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">72%</div>
+                            <div class="metric-label">Accuracy vs 40% Baseline</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The "No Frameworks" Challenge</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        Most people use TensorFlow or PyTorch. You import a model, call .fit(), and the framework handles everything. You never actually learn what's happening inside.
-                    </p>
-                    <p style="margin: 15px 0; font-size: 18px;">
-                        I implemented convolutional neural networks using only NumPy—no deep learning frameworks. That means I wrote the math for forward propagation, backpropagation, gradient descent, convolution operations, and pooling layers from equations. When training failed, I couldn't blame the framework. I had to debug the actual gradient flow through the network.
+                        In modern AI, anyone can import PyTorch, copy-paste a ResNet architecture, and hit 95% accuracy in an hour. But that doesn't mean they understand how it works. I wanted to prove I understood the math, not just the API. I imposed a strict constraint: Build a Deep Convolutional Neural Network using nothing but Python and NumPy.
                     </p>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">What I Built</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Engineering & Mathematics</h3>
                     <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>LeNet-5 (1998 architecture):</strong> Classic CNN from Yann LeCun's original paper. Conv layer → pooling → conv layer → pooling → fully connected → output. Implemented exact architecture: 5x5 kernels, tanh activations, average pooling. Had to derive gradients for every layer by hand.</li>
-                        <li><strong>Mini-VGG (deeper network):</strong> Modernized architecture with 3x3 convolutions, ReLU activations, max pooling, batch normalization, dropout. More parameters, deeper network, harder to train. Required careful initialization and learning rate scheduling to converge.</li>
-                        <li><strong>CIFAR-10 Classification:</strong> 60,000 32x32 color images across 10 classes (airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck). This is a standard computer vision benchmark. State-of-the-art gets 95%+ accuracy with modern architectures and lots of tricks. My from-scratch implementation hit 70%+ just using the fundamentals.</li>
+                        <li><strong>Manual Backpropagation:</strong> I didn't use distinct autograd engines. I derived the gradients for every single layer (Convolution, Max Pooling, ReLU, Softmax) using multivariate calculus and implemented the backward pass by hand.</li>
+                        <li><strong>Solving the "Black Box":</strong> When a model failed to converge, I couldn't blame the library. I had to debug the flow of gradients myself. I built a numerical gradient checker to verify my calculus against the code, ensuring accuracy within <code>1e-7</code>.</li>
+                        <li><strong>Performance Optimization:</strong> Python loops are too slow for image processing. I implemented the <code>im2col</code> algorithm to flatten image matrices, converting slow convolution operations into highly optimized matrix multiplications. This sped up training by over 100x.</li>
                     </ul>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Technical Details That Took Forever</h3>
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Implementing Convolution:</strong></p>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Why 72% Is A Win</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">Without modern optimizers, pre-trained weights, or GPU acceleration, training a network from scratch is brutal.</p>
                     <ul style="margin-left: 25px; font-size: 18px;">
-                        <li>Convolution slides a small filter (e.g., 3x3) across the image to detect patterns. Each position computes a dot product. Sounds simple—implementing it efficiently in NumPy is not. Had to handle stride, padding, multiple input channels, multiple output channels, batch processing.</li>
-                        <li>Forward pass: Nested loops would be too slow. Used NumPy's im2col trick to reshape input into a matrix, then matrix multiply. 100x faster.</li>
-                        <li>Backward pass: Computing gradients with respect to inputs, weights, and biases. Each requires careful index management. One wrong dimension and the whole thing breaks.</li>
+                        <li><strong>Random Guessing:</strong> 10%</li>
+                        <li><strong>Linear Classifier:</strong> ~40%</li>
+                        <li><strong>My NumPy Implementation:</strong> 72%</li>
                     </ul>
+                    <p style="margin: 15px 0; font-size: 18px;">I successfully beat the statistical baseline by nearly 2x using an architecture I built entirely from first principles.</p>
 
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Backpropagation Through The Entire Network:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li>Chain rule across every layer. Loss → FC layer → pooling → conv → pooling → conv → input. Each layer passes gradients backward to the previous layer.</li>
-                        <li>Implemented gradient checking: compute gradients numerically and compare to my analytical gradients. If they don't match within 1e-7, something's wrong. Spent hours debugging grad check failures—usually a transpose or sign error.</li>
-                        <li>Vanishing gradients were a problem initially. Activations were dying, gradients going to zero. Fixed with better initialization (Xavier/He init), ReLU instead of tanh, batch normalization, gradient clipping.</li>
-                    </ul>
-
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Optimization Algorithms:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li>Started with vanilla SGD. Too slow, unstable. Added momentum (accumulate velocity, smooth updates). Better but still slow.</li>
-                        <li>Implemented Adam optimizer (adaptive learning rates per parameter). Combines momentum + RMSprop. More complex—need to track first and second moments for every parameter. But training became much more stable.</li>
-                        <li>Learning rate scheduling: Start high (1e-3), decay over time. Implemented exponential decay and step decay. Experimented with warmup periods.</li>
-                    </ul>
-
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Results That Actually Matter</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The PMM Takeaway</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        Hit 72% accuracy on CIFAR-10 test set after ~50 epochs of training. For reference: random guessing is 10%, simple linear classifier is ~40%, my from-scratch CNN is 72%, modern ResNets with tricks hit 95%+.
-                    </p>
-                    <p style="margin: 15px 0; font-size: 18px;">
-                        But the accuracy isn't the point. The point is I understand exactly what's happening at every step. I can explain why certain architectures work, why training fails, what each hyperparameter does, how gradients flow through the network. I didn't just use AI—I built it from the math up.
-                    </p>
-
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Why This Matters for Product Marketing</h3>
-                    <p style="margin: 15px 0; font-size: 18px;">
-                        When an AI company tells me their model uses "deep convolutional architectures," I know exactly what that means technically. I know the engineering tradeoffs: deeper networks are more expressive but harder to train, larger kernels capture more context but increase parameters, pooling reduces compute but loses spatial information.
-                    </p>
-                    <p style="margin: 15px 0; font-size: 18px;">
-                        More importantly, I can translate this to customers. I can explain why their model is actually better (not just buzzwords), what the technical advantages enable, and what tradeoffs they made. Because I've made those same tradeoffs myself.
+                        When engineers talk about "vanishing gradients," "learning rate decay," or "architectural tradeoffs," I don't just nod along. I've faced those exact problems in raw code. I can translate deep technical constraints into clear product narratives because I've actually built the product from the math up.
                     </p>
 
                     <div class="tags" style="margin-top: 20px;">
-                        <span class="tag">Python</span>
-                        <span class="tag">NumPy</span>
-                        <span class="tag">CNN</span>
                         <span class="tag">Computer Vision</span>
-                        <span class="tag">Backpropagation</span>
-                        <span class="tag">Optimization</span>
-                        <span class="tag">CIFAR-10</span>
+                        <span class="tag">NumPy</span>
+                        <span class="tag">Deep Learning</span>
+                        <span class="tag">Calculus</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">From Scratch</span>
                     </div>
                 </div>
 
@@ -1795,58 +1891,59 @@
                     <button class="mac-button" onclick="showProjectsMain()" style="margin-bottom: 20px;">← Back to All Projects</button>
                     
                     <h2 style="font-size: 28px; margin-bottom: 10px;">Sarcasm Detection System</h2>
-                    <span class="case-tag">COMPARATIVE ANALYSIS • NLP • FALL 2024</span>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Question</h3>
+                    <div class="metrics" style="margin: 20px 0;">
+                        <div class="metric-box">
+                            <div class="metric-value">~99%</div>
+                            <div class="metric-label">Cost Reduction vs GPT-4</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">10x</div>
+                            <div class="metric-label">Faster Inference Speed</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">Comparable</div>
+                            <div class="metric-label">Accuracy on Key Tasks</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The "LLM or Bust" Challenge</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        Everyone's using LLMs for everything now. But are they actually better than traditional ML for every task? I wanted to find out. 
-                        So I built two sarcasm detection systems—one using classical neural networks (RNN/LSTM), one using LLM prompting—and compared them.
+                        In the current AI hype cycle, the default answer to every problem is "use an LLM." But for high-volume tasks like real-time content moderation, calling GPT-4 for every single comment is prohibitively expensive and slow. I wanted to quantify the tradeoff. I built a sarcasm detection system to answer a specific business question: Can a specialized, lightweight model replace a massive generalist LLM?
                     </p>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Approach 1: Traditional Neural Networks</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Experiment</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">I designed a head-to-head comparison using a sarcastic news headlines dataset.</p>
                     <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>Architecture:</strong> Embedding layer → LSTM → Dense layer → Binary classification</li>
-                        <li><strong>Training:</strong> Supervised learning on labeled sarcasm dataset</li>
-                        <li><strong>Inference:</strong> Fast, deterministic, runs locally</li>
-                        <li><strong>Cost:</strong> One-time training cost, then essentially free to run</li>
+                        <li><strong>The Heavyweight:</strong> I prompted GPT-3.5/4 with few-shot examples.</li>
+                        <li><strong>The Contender:</strong> I built and trained a custom Bi-Directional LSTM (RNN) using TensorFlow and GloVe embeddings.</li>
+                        <li><strong>The Goal:</strong> Measure the exact ROI of swapping a "smart" model for a "fast" one.</li>
                     </ul>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Approach 2: LLM Prompting</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">What I Found (The Data)</h3>
                     <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>Architecture:</strong> Prompt engineering with GPT-style models</li>
-                        <li><strong>Training:</strong> Zero-shot or few-shot learning</li>
-                        <li><strong>Inference:</strong> Requires API calls, slower, non-deterministic</li>
-                        <li><strong>Cost:</strong> Pay per token, ongoing operational cost</li>
+                        <li><strong>Accuracy:</strong> The LLM had a slight edge (~5% better), mostly on detecting sarcasm that required obscure pop-culture knowledge.</li>
+                        <li><strong>Speed:</strong> The traditional LSTM was 10x faster at inference. It ran locally and deterministically, while the LLM required variable-latency API calls.</li>
+                        <li><strong>Cost:</strong> Processing 1 million headlines with GPT-4 would cost thousands of dollars. The LSTM inference cost is negligible (electricity only) once trained.</li>
                     </ul>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">What I Found</h3>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li><strong>Accuracy:</strong> LLM prompting had slight edge (~5% better) on edge cases and nuanced sarcasm</li>
-                        <li><strong>Speed:</strong> Traditional model was 10x faster at inference</li>
-                        <li><strong>Cost:</strong> Traditional model cheaper for high-volume applications</li>
-                        <li><strong>Explainability:</strong> Traditional model easier to debug and understand failures</li>
-                        <li><strong>Deployment:</strong> Traditional model simpler to deploy and maintain</li>
-                    </ul>
-
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Answer</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The "Build vs. Buy" Verdict</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        It depends. LLMs are better if you need maximum accuracy, have low volume, or want to iterate quickly. Traditional models are better 
-                        if you need speed, have high volume, or want lower costs. There's no universal "best"—just tradeoffs.
+                        The answer isn't "LLMs are better." The answer is "It depends on your constraints." If you need maximum accuracy for low-volume tasks, buy the LLM API. If you need real-time speed for high-volume processing (like chat moderation) and want to protect your margins, build the custom LSTM.
                     </p>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Why This Matters for Product Marketing</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The PMM Takeaway</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        AI companies love to say "powered by advanced AI" without specifying what that means. But customers care about the tradeoffs. 
-                        This project taught me how to evaluate different AI approaches, understand the engineering decisions, and explain the actual 
-                        value to customers. Not just "it's AI"—but "here's why this specific approach solves your problem better."
+                        This project taught me how to perform a technical cost-benefit analysis. As a PMM, I don't just advocate for the "smartest" technology; I advocate for the right tool for the business case. I can look at a product roadmap and help engineering decide where we need "intelligence" (LLMs) and where we just need "pattern recognition" (Traditional ML) to solve the user's problem profitably.
                     </p>
 
                     <div class="tags" style="margin-top: 20px;">
                         <span class="tag">NLP</span>
-                        <span class="tag">LLMs</span>
-                        <span class="tag">RNN/LSTM</span>
-                        <span class="tag">Prompt Engineering</span>
-                        <span class="tag">Comparative Analysis</span>
+                        <span class="tag">Cost Analysis</span>
+                        <span class="tag">GenAI</span>
+                        <span class="tag">TensorFlow</span>
+                        <span class="tag">Benchmarking</span>
+                        <span class="tag">Build vs Buy</span>
                     </div>
                 </div>
 
@@ -1854,72 +1951,54 @@
                     <button class="mac-button" onclick="showProjectsMain()" style="margin-bottom: 20px;">← Back to All Projects</button>
                     
                     <h2 style="font-size: 28px; margin-bottom: 10px;">This Portfolio Website</h2>
-                    <span class="case-tag">WEB DEVELOPMENT • UI/UX • DECEMBER 2024</span>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Why Build This?</h3>
+                    <div class="metrics" style="margin: 20px 0;">
+                        <div class="metric-box">
+                            <div class="metric-value">0</div>
+                            <div class="metric-label">Frameworks Used</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">100%</div>
+                            <div class="metric-label">Vanilla JavaScript</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="metric-value">Custom</div>
+                            <div class="metric-label">State Management</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Design Challenge</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        I wanted to build something that shows what I can do technically. So I built this portfolio from scratch—no 
-                        frameworks, no templates. Just HTML/CSS/JS and a lot of time getting the details right.
+                        Most portfolios are static Squarespace templates. I wanted to build something that proved I could actually ship a product. My goal was to recreate a fully functional, retro operating system inside the browser. The catch? I forced myself to use zero frameworks. No React, no Vue, no libraries for the UI. Just raw HTML, CSS, and JavaScript.
                     </p>
 
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Technical Features</h3>
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Window Management System:</strong></p>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The Engineering: Building an OS in the Browser</h3>
                     <ul style="margin-left: 25px; font-size: 18px;">
-                        <li>Draggable windows with mousedown/mousemove event handling</li>
-                        <li>Z-index management for window layering</li>
-                        <li>Minimize, maximize, close functionality</li>
-                        <li>Taskbar with active window tracking</li>
+                        <li><strong>Window Management System:</strong> Without React's state management, I had to build my own engine to handle window layering. I wrote the logic for dragging, minimizing, maximizing, and updating <code>z-index</code> values dynamically so the active window always stays on top.</li>
+                        <li><strong>Audio Engine:</strong> The music player isn't just an embed. I used the <code>jsmediatags</code> library to parse raw MP3 binary data directly in the browser, extracting and rendering the album art and metadata in real-time.</li>
+                        <li><strong>State Management:</strong> I built a lightweight, custom state store to track which applications are open, active, or minimized, ensuring the "taskbar" stays in sync with the desktop environment.</li>
                     </ul>
 
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Music Player:</strong></p>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Visual Polish & UX</h3>
+                    <p style="margin: 15px 0; font-size: 18px;">I didn't just want it to work; I wanted it to feel authentic.</p>
                     <ul style="margin-left: 25px; font-size: 18px;">
-                        <li>Real-time MP3 metadata parsing using jsmediatags library</li>
-                        <li>Dynamic UI updates based on ID3 tags (title, artist, album, artwork)</li>
-                        <li>Playback controls, shuffle, track progression</li>
-                        <li>Custom album art rendering when metadata not available</li>
+                        <li><strong>Pixel Art:</strong> I hand-crafted the icons using CSS and Canvas to match the retro aesthetic.</li>
+                        <li><strong>Interactivity:</strong> Every button press and window drag has deliberate feedback.</li>
+                        <li><strong>Responsiveness:</strong> I engineered the CSS grid to adapt the desktop layout seamlessly from ultra-wide monitors down to mobile screens.</li>
                     </ul>
 
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Visual Design:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li>Pixel-perfect retro Mac OS aesthetic</li>
-                        <li>Custom pixel art icons drawn on canvas elements</li>
-                        <li>16-bit color palette and styling</li>
-                        <li>Responsive to different screen sizes</li>
-                    </ul>
-
-                    <p style="margin: 15px 0; font-size: 18px;"><strong>Navigation:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 18px;">
-                        <li>Multi-level content navigation (main view → detail view)</li>
-                        <li>Back button functionality within windows</li>
-                        <li>Scroll position management</li>
-                        <li>Clean URL structure</li>
-                    </ul>
-
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">Why No Frameworks?</h3>
+                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">The PMM Takeaway</h3>
                     <p style="margin: 15px 0; font-size: 18px;">
-                        Frameworks are great for production apps at scale. But they also hide complexity. I wanted to show I understand the fundamentals—
-                        DOM manipulation, event handling, state management, browser APIs. Building without frameworks forces you to really understand 
-                        how the web works.
-                    </p>
-
-                    <h3 style="font-size: 22px; margin-top: 25px; border-bottom: 1px solid #000; padding-bottom: 5px;">What This Demonstrates</h3>
-                    <p style="margin: 15px 0; font-size: 18px;">
-                        This site shows I can actually build things, not just talk about them. The window system handles drag events, z-index management, 
-                        and state tracking. The music player parses MP3 files in real-time. The animations are smooth and deliberate. 
-                        Everything works without frameworks because I wanted to understand the fundamentals.
-                    </p>
-                    <p style="margin: 15px 0; font-size: 18px;">
-                        The retro aesthetic is intentional—it's memorable and shows attention to detail. Every pixel art icon, every animation timing, 
-                        every interaction was planned out.
+                        In product marketing, the difference between "good" and "great" is often in the last 10% of fit-and-finish. This project proves I obsess over the details. I understand the engineering effort required to make an interface feel "snappy," and I can speak the same language as frontend developers when we're discussing UI/UX tradeoffs.
                     </p>
 
                     <div class="tags" style="margin-top: 20px;">
-                        <span class="tag">HTML/CSS/JS</span>
-                        <span class="tag">Vanilla JS</span>
+                        <span class="tag">Web Development</span>
                         <span class="tag">UI/UX</span>
-                        <span class="tag">Audio API</span>
-                        <span class="tag">Canvas</span>
+                        <span class="tag">Vanilla JS</span>
                         <span class="tag">DOM Manipulation</span>
+                        <span class="tag">Audio API</span>
+                        <span class="tag">CSS Grid</span>
                     </div>
                 </div>
             </div>
@@ -1927,7 +2006,7 @@
 
         <!-- Skills Window -->
         <div id="skills" class="window" onclick="bringToFront('skills')" style="top: 160px; left: 160px; width: 750px; height: 600px;">
-            <div class="window-titlebar" onmousedown="startDrag(event, 'skills')">
+            <div class="window-titlebar" onmousedown="startDrag(event, 'skills')" ontouchstart="startDrag(event, 'skills')">
                 <div class="window-controls">
                     <div class="window-control" onclick="closeWindow('skills')" title="Close">✕</div>
                     <div class="window-control" onclick="minimizeWindow('skills')" title="Minimize">_</div>
@@ -1940,84 +2019,63 @@
 
                 <div class="skills-section">
                     <div class="skill-category">
+                        <h3>AI Engineering & Data Science</h3>
+                        <div class="skill-items">
+                            <span class="skill-chip">Python</span>
+                            <span class="skill-chip">GenAI Development (Ollama/Llama 3)</span>
+                            <span class="skill-chip">GraphQL</span>
+                            <span class="skill-chip">MongoDB</span>
+                            <span class="skill-chip">Flask</span>
+                            <span class="skill-chip">Streamlit</span>
+                            <span class="skill-chip">TensorFlow</span>
+                            <span class="skill-chip">PyTorch</span>
+                            <span class="skill-chip">SQL</span>
+                            <span class="skill-chip">Git/GitHub</span>
+                            <span class="skill-chip">APIs</span>
+                            <span class="skill-chip">Statistical Analysis</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
                         <h3>Product Marketing & GTM</h3>
                         <div class="skill-items">
-                            <span class="skill-chip">Campaign Strategy</span>
+                            <span class="skill-chip">Go-To-Market Strategy</span>
                             <span class="skill-chip">Product Positioning</span>
-                            <span class="skill-chip">Go-to-Market Planning</span>
-                            <span class="skill-chip">Competitive Analysis</span>
                             <span class="skill-chip">Sales Enablement</span>
-                            <span class="skill-chip">Customer Research</span>
-                            <span class="skill-chip">Messaging & Copy</span>
-                            <span class="skill-chip">Budget Management ($2M+)</span>
+                            <span class="skill-chip">Product Launches</span>
+                            <span class="skill-chip">Competitive Intelligence</span>
                             <span class="skill-chip">A/B Testing</span>
-                            <span class="skill-chip">Multi-Channel Campaigns</span>
-                            <span class="skill-chip">Stakeholder Management</span>
-                            <span class="skill-chip">Performance Analytics</span>
+                            <span class="skill-chip">Retention Strategy</span>
+                            <span class="skill-chip">Cross-Functional Leadership</span>
+                            <span class="skill-chip">Budget Management ($2M+)</span>
                         </div>
                     </div>
 
                     <div class="skill-category">
-                        <h3>AI/ML & Data Science</h3>
+                        <h3>Tools & Platforms</h3>
                         <div class="skill-items">
-                            <span class="skill-chip">Python (pandas, NumPy, scikit-learn)</span>
-                            <span class="skill-chip">Deep Learning (TensorFlow, PyTorch, Keras)</span>
-                            <span class="skill-chip">Neural Networks (CNNs, RNNs, Transformers)</span>
-                            <span class="skill-chip">Natural Language Processing</span>
-                            <span class="skill-chip">LLM Prompting & Evaluation</span>
-                            <span class="skill-chip">Model Training & Optimization</span>
-                            <span class="skill-chip">Computer Vision</span>
-                            <span class="skill-chip">Statistical Analysis</span>
-                            <span class="skill-chip">Data Visualization</span>
-                            <span class="skill-chip">SQL/NoSQL (MongoDB)</span>
-                            <span class="skill-chip">Git/GitHub</span>
-                            <span class="skill-chip">API Integration</span>
-                        </div>
-                    </div>
-
-                    <div class="skill-category">
-                        <h3>Marketing Tools & Platforms</h3>
-                        <div class="skill-items">
-                            <span class="skill-chip">HubSpot (Marketing & CRM)</span>
+                            <span class="skill-chip">HubSpot</span>
+                            <span class="skill-chip">Salesforce</span>
                             <span class="skill-chip">Google Analytics</span>
-                            <span class="skill-chip">Adobe Analytics</span>
-                            <span class="skill-chip">Salesforce CRM</span>
-                            <span class="skill-chip">Adobe Creative Suite</span>
                             <span class="skill-chip">Figma</span>
-                            <span class="skill-chip">Canva</span>
-                            <span class="skill-chip">Workfront (Project Mgmt)</span>
-                            <span class="skill-chip">CMS Platforms</span>
-                            <span class="skill-chip">Email Automation</span>
-                            <span class="skill-chip">Landing Page Optimization</span>
-                            <span class="skill-chip">SEO/SEM</span>
-                        </div>
-                    </div>
-
-                    <div class="skill-category">
-                        <h3>Technical Skills for Marketing</h3>
-                        <div class="skill-items">
-                            <span class="skill-chip">HTML/CSS/JavaScript</span>
-                            <span class="skill-chip">Technical Documentation</span>
-                            <span class="skill-chip">Developer Education</span>
-                            <span class="skill-chip">API Documentation</span>
-                            <span class="skill-chip">Data Analysis for Marketing</span>
-                            <span class="skill-chip">Marketing Automation</span>
-                            <span class="skill-chip">Technical Writing</span>
-                            <span class="skill-chip">Product Demos</span>
+                            <span class="skill-chip">Adobe Analytics</span>
+                            <span class="skill-chip">Jira</span>
+                            <span class="skill-chip">Tableau</span>
+                            <span class="skill-chip">Microsoft Teams</span>
+                            <span class="skill-chip">VS Code</span>
                         </div>
                     </div>
                 </div>
 
                 <p style="margin-top: 30px; font-size: 19px; background: var(--mac-gray); padding: 15px; border: 2px solid #000;">
-                    <strong>What this means for AI product marketing:</strong> I can understand what engineering is building, 
-                    why it matters technically, and how to position it in ways that drive adoption and revenue.
+                    <strong>What this means for AI product marketing:</strong> I don't just market the "black box." I can inspect the code, query the database, and build the prototype myself, allowing me to write positioning that earns the trust of both engineers and buyers.
                 </p>
             </div>
         </div>
 
         <!-- Contact Window -->
         <div id="contact" class="window" onclick="bringToFront('contact')" style="top: 180px; left: 180px; width: 650px; height: 500px;">
-            <div class="window-titlebar" onmousedown="startDrag(event, 'contact')">
+            <div class="window-titlebar" onmousedown="startDrag(event, 'contact')" ontouchstart="startDrag(event, 'contact')">
                 <div class="window-controls">
                     <div class="window-control" onclick="closeWindow('contact')" title="Close">✕</div>
                     <div class="window-control" onclick="minimizeWindow('contact')" title="Minimize">_</div>
@@ -2029,12 +2087,12 @@
                 <h2 style="font-size: 28px; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">LET'S TALK</h2>
                 
                 <p style="font-size: 19px; margin-bottom: 30px;">
-                    Looking for product marketing roles at AI companies where I can bridge technical and business teams to drive growth.
+                    You have the engineering velocity. I have the market strategy. Let's bridge the gap.
                 </p>
 
                 <div class="contact-methods">
                     <div class="contact-item">
-                        <div class="contact-icon">📧</div>
+                        <div class="contact-icon"><canvas id="contact-icon-email" width="48" height="48"></canvas></div>
                         <div class="contact-details">
                             <div style="font-weight: bold; font-size: 20px; margin-bottom: 5px;">Email</div>
                             <a href="/cdn-cgi/l/email-protection#127376737f607b767b7c7561252b52757f737b7e3c717d7f"><span class="__cf_email__" data-cfemail="ddbcb9bcb0afb4b9b4b3baaeeae49dbab0bcb4b1f3beb2b0">[email&#160;protected]</span></a>
@@ -2042,7 +2100,7 @@
                     </div>
 
                     <div class="contact-item">
-                        <div class="contact-icon">💼</div>
+                        <div class="contact-icon"><canvas id="contact-icon-linkedin" width="48" height="48"></canvas></div>
                         <div class="contact-details">
                             <div style="font-weight: bold; font-size: 20px; margin-bottom: 5px;">LinkedIn</div>
                             <a href="https://www.linkedin.com/in/adamridings/" target="_blank">linkedin.com/in/adamridings</a>
@@ -2050,7 +2108,7 @@
                     </div>
 
                     <div class="contact-item">
-                        <div class="contact-icon">🌐</div>
+                        <div class="contact-icon"><canvas id="contact-icon-portfolio" width="48" height="48"></canvas></div>
                         <div class="contact-details">
                             <div style="font-weight: bold; font-size: 20px; margin-bottom: 5px;">Portfolio</div>
                             <a href="https://adamridings.com" target="_blank">adamridings.com</a>
@@ -2058,7 +2116,7 @@
                     </div>
 
                     <div class="contact-item">
-                        <div class="contact-icon">📱</div>
+                        <div class="contact-icon"><canvas id="contact-icon-phone" width="48" height="48"></canvas></div>
                         <div class="contact-details">
                             <div style="font-weight: bold; font-size: 20px; margin-bottom: 5px;">Phone</div>
                             <a href="tel:8168636941">(816) 863-6941</a>
@@ -2066,19 +2124,12 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 30px; padding: 20px; background: var(--mac-gray); border: 2px solid #000;">
-                    <p style="font-size: 18px; margin-bottom: 10px;"><strong>What I'm looking for:</strong></p>
-                    <ul style="margin-left: 25px; font-size: 17px;">
-                        <li>Product Marketing roles at AI/ML companies</li>
-                        <li>Positions where technical depth and marketing experience both matter</li>
-                    </ul>
-                </div>
             </div>
         </div>
 
         <!-- Resume Window -->
         <div id="resume" class="window" onclick="bringToFront('resume')" style="top: 200px; left: 200px; width: 800px; height: 600px;">
-            <div class="window-titlebar" onmousedown="startDrag(event, 'resume')">
+            <div class="window-titlebar" onmousedown="startDrag(event, 'resume')" ontouchstart="startDrag(event, 'resume')">
                 <div class="window-controls">
                     <div class="window-control" onclick="closeWindow('resume')" title="Close">✕</div>
                     <div class="window-control" onclick="minimizeWindow('resume')" title="Minimize">_</div>
@@ -2095,17 +2146,19 @@
                     </a>
                 </div>
 
-                <iframe src="Adam_Ridings_Resume.pdf" class="pdf-viewer"></iframe>
+                <div style="margin-bottom: 20px; text-align: center;">
+                    <span class="tag">Status: Active</span>
+                    <span class="tag">Degree: M.S. Data Science (2026)</span>
+                    <span class="tag">Focus: AI Product Marketing</span>
+                </div>
 
-                <p style="margin-top: 20px; font-size: 17px; text-align: center; color: #666;">
-                    Click the button above to download a copy, or view inline.
-                </p>
+                <iframe src="Adam_Ridings_Resume.pdf" class="pdf-viewer" id="resumeIframe"></iframe>
             </div>
         </div>
 
         <!-- Music Library Window -->
         <div id="music" class="window" onclick="bringToFront('music')" style="top: 220px; left: 220px; width: 600px; height: 500px;">
-            <div class="window-titlebar" onmousedown="startDrag(event, 'music')">
+            <div class="window-titlebar" onmousedown="startDrag(event, 'music')" ontouchstart="startDrag(event, 'music')">
                 <div class="window-controls">
                     <div class="window-control" onclick="closeWindow('music')" title="Close">✕</div>
                     <div class="window-control" onclick="minimizeWindow('music')" title="Minimize">_</div>
@@ -2168,7 +2221,7 @@
         <div class="music-bar-toggle" onclick="toggleMusicBar()" title="Minimize/Maximize">
             <div class="music-bar-toggle-icon"></div>
         </div>
-        <div class="music-bar-album-art" id="barAlbumArt"><canvas width="48" height="48" style="width: 40px; height: 40px; image-rendering: pixelated;"></canvas></div>
+        <div class="music-bar-album-art" id="barAlbumArt" onclick="openWindow('music', this)" style="cursor: pointer;"><canvas width="48" height="48" style="width: 40px; height: 40px; image-rendering: pixelated;"></canvas></div>
         <div class="music-bar-info">
             <div class="music-bar-title" id="barTitle">No Track Playing</div>
             <div class="music-bar-artist" id="barArtist">Select a song from the Music Library</div>
@@ -2194,7 +2247,7 @@
     <!-- Audio Player (hidden) -->
     <audio id="audioPlayer"></audio>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Music Player
         const MUSIC_BASE_URL = './Music/'; // Music folder
         const MUSIC_FILES = [
@@ -2354,9 +2407,8 @@
             updatePlayPauseButton();
             highlightCurrentTrack();
 
-            // Enable shuffle mode if not already
-            if (!isShuffleMode) {
-                isShuffleMode = true;
+            // If shuffle mode is on but playlist not built yet, build it now
+            if (isShuffleMode && shuffledPlaylist.length === 0) {
                 createShuffledPlaylist();
             }
         }
@@ -2607,8 +2659,16 @@
         drawAllMusicIcons();
 
         // Window Management
-        let activeWindows = new Set(['welcome']);
-        let frontWindow = 'welcome'; // Track which window is in front
+        let activeWindows = new Set();
+        let frontWindow = null;
+
+        // Only auto-open README on desktop
+        if (window.innerWidth > 768) {
+            activeWindows.add('welcome');
+            frontWindow = 'welcome';
+            const welcomeEl = document.getElementById('welcome');
+            if (welcomeEl) welcomeEl.classList.add('active');
+        }
         let draggedWindow = null;
         let dragOffsetX = 0;
         let dragOffsetY = 0;
@@ -2616,6 +2676,16 @@
 
         function openWindow(windowId, sourceElement) {
             const windowEl = document.getElementById(windowId);
+
+            // Reset scroll to top on every open
+            const content = windowEl.querySelector('.window-content');
+            if (content) content.scrollTop = 0;
+
+            // Reset resume iframe to top whenever window opens
+            if (windowId === 'resume') {
+                const iframe = document.getElementById('resumeIframe');
+                if (iframe) { iframe.src = iframe.src; }
+            }
             
             if (activeWindows.has(windowId)) {
                 // Already open, just bring to front
@@ -2884,37 +2954,51 @@
 
         // Dragging
         function startDrag(e, windowId) {
+            // Don't interfere with taps on window control buttons
+            if (e.target.closest('.window-control')) return;
+
             const windowEl = document.getElementById(windowId);
             if (windowEl.classList.contains('fullscreen')) return;
+
+            // On mobile, windows are fullscreen — no dragging needed
+            if (window.innerWidth <= 768) return;
+            
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
             draggedWindow = windowId;
             const rect = windowEl.getBoundingClientRect();
-            dragOffsetX = e.clientX - rect.left;
-            dragOffsetY = e.clientY - rect.top;
+            dragOffsetX = clientX - rect.left;
+            dragOffsetY = clientY - rect.top;
             bringToFront(windowId);
             e.preventDefault();
         }
 
-        document.addEventListener('mousemove', (e) => {
-            if (draggedWindow) {
-                const windowEl = document.getElementById(draggedWindow);
-                if (windowEl.classList.contains('fullscreen')) return;
+        function doDrag(e) {
+            if (!draggedWindow) return;
+            const windowEl = document.getElementById(draggedWindow);
+            if (windowEl.classList.contains('fullscreen')) return;
 
-                let newX = e.clientX - dragOffsetX;
-                let newY = e.clientY - dragOffsetY;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-                // Bounds checking - only prevent going under taskbar (50px)
-                newX = Math.max(0, Math.min(newX, window.innerWidth - windowEl.offsetWidth));
-                newY = Math.max(28, Math.min(newY, window.innerHeight - windowEl.offsetHeight - 50));
+            let newX = clientX - dragOffsetX;
+            let newY = clientY - dragOffsetY;
 
-                windowEl.style.left = newX + 'px';
-                windowEl.style.top = newY + 'px';
-            }
-        });
+            newX = Math.max(0, Math.min(newX, window.innerWidth - windowEl.offsetWidth));
+            newY = Math.max(28, Math.min(newY, window.innerHeight - windowEl.offsetHeight - 50));
 
-        document.addEventListener('mouseup', () => {
-            draggedWindow = null;
-        });
+            windowEl.style.left = newX + 'px';
+            windowEl.style.top = newY + 'px';
+            e.preventDefault();
+        }
+
+        function stopDrag() { draggedWindow = null; }
+
+        document.addEventListener('mousemove', doDrag);
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchmove', doDrag, { passive: false });
+        document.addEventListener('touchend', stopDrag);
 
         // Clock
         function updateClock() {
@@ -2922,11 +3006,92 @@
             const hours = now.getHours() % 12 || 12;
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
-            document.getElementById('clock').textContent = `${hours}:${minutes} ${ampm}`;
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const dateStr = `${days[now.getDay()]} ${months[now.getMonth()]} ${now.getDate()}`;
+            document.getElementById('clock').textContent = `${dateStr}  |  ${hours}:${minutes} ${ampm}`;
         }
 
         updateClock();
         setInterval(updateClock, 1000);
+
+        // Reset scroll position on all windows at page load
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.window-content').forEach(function(el) {
+                el.scrollTop = 0;
+            });
+            // Reset resume PDF to top
+            const iframe = document.getElementById('resumeIframe');
+            if (iframe) { iframe.src = iframe.src; }
+        });
+
+        // Music bar title: only scroll if text overflows, title only, not on mobile
+        (function() {
+            var info = document.querySelector('.music-bar-info');
+            var title = document.getElementById('barTitle');
+            if (!info || !title) return;
+
+            function isMobile() {
+                return window.matchMedia('(max-width: 768px)').matches;
+            }
+
+            info.addEventListener('mouseenter', function() {
+                if (isMobile()) return;
+                if (title.scrollWidth > title.offsetWidth) {
+                    title.classList.add('scrolling');
+                }
+            });
+
+            info.addEventListener('mouseleave', function() {
+                title.classList.remove('scrolling');
+            });
+        })();
+
+
+        // Mobile menu dropdowns: tap to toggle (hover doesn't work on touch)
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('.menu-item').forEach(function(item) {
+                item.addEventListener('touchend', function(e) {
+                    var dropdown = this.querySelector('.menu-dropdown');
+                    if (!dropdown) return;
+                    // If the tap was on a dropdown item, let its onclick fire
+                    if (e.target.closest('.menu-dropdown-item')) return;
+                    e.preventDefault();
+                    var isOpen = dropdown.style.display === 'block';
+                    // Close all dropdowns
+                    document.querySelectorAll('.menu-dropdown').forEach(function(d) {
+                        d.style.display = '';
+                    });
+                    // Toggle this one
+                    dropdown.style.display = isOpen ? '' : 'block';
+                });
+            });
+
+            // Add touchend to dropdown items so they fire reliably
+            document.querySelectorAll('.menu-dropdown-item').forEach(function(item) {
+                item.addEventListener('touchend', function(e) {
+                    e.stopPropagation();
+                    // Close all dropdowns
+                    document.querySelectorAll('.menu-dropdown').forEach(function(d) {
+                        d.style.display = '';
+                    });
+                    // Trigger the onclick
+                    var onclick = this.getAttribute('onclick');
+                    if (onclick) {
+                        try { eval(onclick); } catch(err) {}
+                    }
+                });
+            });
+
+            // Tap anywhere else to close dropdowns
+            document.addEventListener('touchend', function(e) {
+                if (!e.target.closest('.menu-item')) {
+                    document.querySelectorAll('.menu-dropdown').forEach(function(d) {
+                        d.style.display = '';
+                    });
+                }
+            });
+        }
 
         // Initialize
         updateTaskbar();
@@ -2968,6 +3133,23 @@
             drawIcon('icon-resume', drawDocumentIcon);
             drawIcon('icon-music', drawMusicIcon);
             drawIcon('icon-linkedin', drawLinkedInIcon);
+
+            // Mobile icons (same draw functions, separate canvas IDs)
+            drawIcon('mob-icon-readme', drawReadmeIcon);
+            drawIcon('mob-icon-about', drawFolderIcon);
+            drawIcon('mob-icon-work', drawBriefcaseIcon);
+            drawIcon('mob-icon-projects', drawTerminalIcon);
+            drawIcon('mob-icon-skills', drawToolsIcon);
+            drawIcon('mob-icon-contact', drawEnvelopeIcon);
+            drawIcon('mob-icon-resume', drawDocumentIcon);
+            drawIcon('mob-icon-music', drawMusicIcon);
+            drawIcon('mob-icon-linkedin', drawLinkedInIcon);
+
+            // Contact window icons
+            drawIcon('contact-icon-email', drawEnvelopeIcon);
+            drawIcon('contact-icon-linkedin', drawLinkedInIcon);
+            drawIcon('contact-icon-portfolio', drawGlobeIcon);
+            drawIcon('contact-icon-phone', drawPhoneIcon);
             console.log('All icons drawn!');
         }
 
@@ -3396,6 +3578,83 @@
             ctx.fillRect(7, 8, 1, 32);
             ctx.fillRect(40, 8, 1, 32);
             ctx.fillRect(8, 40, 32, 1);
+        }
+
+        // Globe Icon
+        function drawGlobeIcon(ctx) {
+            // Blue circle
+            ctx.fillStyle = '#2277cc';
+            ctx.beginPath();
+            ctx.arc(24, 22, 16, 0, Math.PI * 2);
+            ctx.fill();
+
+            // White grid lines clipped to circle
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(24, 22, 16, 0, Math.PI * 2);
+            ctx.clip();
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+            ctx.lineWidth = 1.5;
+
+            // Equator
+            ctx.beginPath();
+            ctx.moveTo(8, 22); ctx.lineTo(40, 22);
+            ctx.stroke();
+
+            // Top & bottom latitude
+            ctx.beginPath();
+            ctx.ellipse(24, 22, 16, 6, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Vertical meridian
+            ctx.beginPath();
+            ctx.moveTo(24, 6); ctx.lineTo(24, 38);
+            ctx.stroke();
+
+            // Curved side meridians
+            ctx.beginPath();
+            ctx.ellipse(24, 22, 8, 16, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.restore();
+
+            // Outline
+            ctx.strokeStyle = '#114499';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(24, 22, 16, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Stand
+            ctx.fillStyle = '#555';
+            ctx.fillRect(22, 38, 4, 4);
+            ctx.fillRect(16, 42, 16, 2);
+        }
+
+        // Phone Icon
+        function drawPhoneIcon(ctx) {
+            // Body
+            ctx.fillStyle = '#222';
+            ctx.fillRect(12, 2, 24, 44);
+
+            // Screen
+            ctx.fillStyle = '#4488dd';
+            ctx.fillRect(14, 8, 20, 28);
+
+            // Speaker slot
+            ctx.fillStyle = '#444';
+            ctx.fillRect(19, 4, 10, 2);
+
+            // Home button circle
+            ctx.fillStyle = '#444';
+            ctx.fillRect(20, 38, 8, 6);
+            ctx.fillStyle = '#333';
+            ctx.fillRect(21, 39, 6, 4);
+
+            // Screen shine
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.fillRect(14, 8, 5, 28);
         }
 
         // INITIALIZE - Draw all icons after everything is defined
